@@ -19,6 +19,8 @@ import { useUserStoreHook } from "@/store/modules/user";
 const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
   timeout: 10000,
+  // 后端API基础路径
+  baseURL: "http://localhost:3001",
   headers: {
     Accept: "application/json, text/plain, */*",
     "Content-Type": "application/json",
