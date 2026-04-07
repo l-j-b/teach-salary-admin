@@ -74,6 +74,7 @@ type ResultTable = {
 
 /** 登录 */
 export const getLogin = (data?: object) => {
+<<<<<<< HEAD
   return http.request<UserResult>("put", "/login/in", { data });
 };
 /** 刷新`token` */
@@ -81,6 +82,14 @@ export const refreshTokenApi = (data?: object) => {
   return http.request<RefreshTokenResult>("post", "/login/refresh-token", {
     data
   });
+=======
+  return http.request<UserResult>("post", "/login", { data });
+};
+
+/** 刷新`token` */
+export const refreshTokenApi = (data?: object) => {
+  return http.request<RefreshTokenResult>("post", "/refresh-token", { data });
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
 };
 
 /** 账户设置-个人信息 */

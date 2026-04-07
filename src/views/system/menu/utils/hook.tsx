@@ -107,7 +107,11 @@ export function useMenu() {
   async function onSearch() {
     loading.value = true;
     const { code, data } = await getMenuList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parentId，parentId取父节点id
+<<<<<<< HEAD
     if (code === 20000) {
+=======
+    if (code === 0) {
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       let newData = data;
       if (!isAllEmpty(form.title)) {
         // 前端搜索菜单名称

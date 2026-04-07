@@ -24,7 +24,11 @@ const submitForm = formEl => {
       });
       formUpload(formData)
         .then(({ code }) => {
+<<<<<<< HEAD
           if (code === 20000) {
+=======
+          if (code === 0) {
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
             message("提交成功", { type: "success" });
           } else {
             message("提交失败");

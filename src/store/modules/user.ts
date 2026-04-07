@@ -75,6 +75,7 @@ export const useUserStore = defineStore("pure-user", {
     SET_LOGINDAY(value: number) {
       this.loginDay = Number(value);
     },
+<<<<<<< HEAD
     /** 加密密码 */
     async encryptPassword(password) {
       const encoder = new TextEncoder();
@@ -99,6 +100,14 @@ export const useUserStore = defineStore("pure-user", {
         getLogin(data)
           .then(data => {
             if (data.code === 20000) {
+=======
+    /** 登入 */
+    async loginByUsername(data) {
+      return new Promise<UserResult>((resolve, reject) => {
+        getLogin(data)
+          .then(data => {
+            if (data.code === 0) {
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
               setToken(data.data);
               resolve(data);
             } else {
@@ -125,7 +134,11 @@ export const useUserStore = defineStore("pure-user", {
       return new Promise<RefreshTokenResult>((resolve, reject) => {
         refreshTokenApi(data)
           .then(data => {
+<<<<<<< HEAD
             if (data.code === 20000) {
+=======
+            if (data.code === 0) {
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
               setToken(data.data);
               resolve(data);
             } else {

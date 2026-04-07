@@ -4,11 +4,19 @@ import { faker } from "@faker-js/faker/locale/zh_CN";
 export default defineFakeRoute([
   // 账户设置-个人信息
   {
+<<<<<<< HEAD
     url: "/v1/mine",
     method: "get",
     response: () => {
       return {
         code: 20000,
+=======
+    url: "/mine",
+    method: "get",
+    response: () => {
+      return {
+        code: 0,
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
         message: "操作成功",
         data: {
           avatar: "https://avatars.githubusercontent.com/u/44761321",
@@ -23,7 +31,11 @@ export default defineFakeRoute([
   },
   // 账户设置-个人安全日志
   {
+<<<<<<< HEAD
     url: "/v1/mine-logs",
+=======
+    url: "/mine-logs",
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
     method: "get",
     response: () => {
       const list = [
@@ -47,7 +59,11 @@ export default defineFakeRoute([
         }
       ];
       return {
+<<<<<<< HEAD
         code: 20000,
+=======
+        code: 0,
+>>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
         message: "操作成功",
         data: {
           list,
