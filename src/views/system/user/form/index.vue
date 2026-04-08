@@ -13,9 +13,9 @@ const props = withDefaults(defineProps<FormProps>(), {
     nickname: "",
     username: "",
     password: "",
-    phone: "",
+    mobile: "",
     email: "",
-    sex: "",
+    gender: 0,
     status: 1,
     remark: ""
   })
@@ -24,10 +24,14 @@ const props = withDefaults(defineProps<FormProps>(), {
 const sexOptions = [
   {
     value: 0,
-    label: "男"
+    label: "未知"
   },
   {
     value: 1,
+    label: "男"
+  },
+  {
+    value: 2,
     label: "女"
   }
 ];
@@ -68,7 +72,6 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </re-col>
-
       <re-col
         v-if="newFormInline.title === '新增'"
         :value="12"
@@ -84,9 +87,9 @@ defineExpose({ getRef });
         </el-form-item>
       </re-col>
       <re-col :value="12" :xs="24" :sm="24">
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="手机号" prop="mobile">
           <el-input
-            v-model="newFormInline.phone"
+            v-model="newFormInline.mobile"
             clearable
             placeholder="请输入手机号"
           />
@@ -105,7 +108,7 @@ defineExpose({ getRef });
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="用户性别">
           <el-select
-            v-model="newFormInline.sex"
+            v-model="newFormInline.gender"
             placeholder="请选择用户性别"
             class="w-full"
             clearable
@@ -113,6 +116,7 @@ defineExpose({ getRef });
             <el-option
               v-for="(item, index) in sexOptions"
               :key="index"
+              :checked="item.value === newFormInline.gender"
               :label="item.label"
               :value="item.value"
             />
@@ -161,7 +165,6 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </re-col>
-
       <re-col>
         <el-form-item label="备注">
           <el-input

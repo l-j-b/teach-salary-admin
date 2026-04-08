@@ -8,20 +8,20 @@ import { IconSelect } from "@/components/ReIcon";
 import Segmented from "@/components/ReSegmented";
 import ReAnimateSelector from "@/components/ReAnimateSelector";
 import {
-  menuTypeOptions,
-  showLinkOptions,
-  fixedTagOptions,
-  keepAliveOptions,
-  hiddenTagOptions,
-  showParentOptions,
-  frameLoadingOptions
+  menu_type_options,
+  show_link_options,
+  fixed_tag_options,
+  keep_alive_options,
+  hidden_tag_options,
+  show_parent_options,
+  frame_loading_options
 } from "./utils/enums";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
-    menuType: 0,
-    higherMenuOptions: [],
-    parentId: 0,
+    menu_type: 0,
+    higher_menu_options: [],
+    parent_id: 0,
     title: "",
     name: "",
     path: "",
@@ -29,18 +29,18 @@ const props = withDefaults(defineProps<FormProps>(), {
     rank: 99,
     redirect: "",
     icon: "",
-    extraIcon: "",
-    enterTransition: "",
-    leaveTransition: "",
-    activePath: "",
+    extra_icon: "",
+    enter_transition: "",
+    leave_transition: "",
+    active_path: "",
     auths: "",
-    frameSrc: "",
-    frameLoading: true,
-    keepAlive: false,
-    hiddenTag: false,
-    fixedTag: false,
-    showLink: true,
-    showParent: false
+    frame_src: "",
+    frame_loading: true,
+    keep_alive: false,
+    hidden_tag: false,
+    fixed_tag: false,
+    show_link: true,
+    show_parent: false
   })
 });
 
@@ -65,8 +65,8 @@ defineExpose({ getRef });
       <re-col>
         <el-form-item label="菜单类型">
           <Segmented
-            v-model="newFormInline.menuType"
-            :options="menuTypeOptions"
+            v-model="newFormInline.menu_type"
+            :options="menu_type_options"
           />
         </el-form-item>
       </re-col>
@@ -74,9 +74,9 @@ defineExpose({ getRef });
       <re-col>
         <el-form-item label="上级菜单">
           <el-cascader
-            v-model="newFormInline.parentId"
+            v-model="newFormInline.parent_id"
             class="w-full"
-            :options="newFormInline.higherMenuOptions"
+            :options="newFormInline.higher_menu_options"
             :props="{
               value: 'id',
               label: 'title',
@@ -104,7 +104,12 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </re-col>
-      <re-col v-if="newFormInline.menuType !== 3" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-if="newFormInline.menu_type !== 3"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="路由名称" prop="name">
           <el-input
             v-model="newFormInline.name"
@@ -114,7 +119,12 @@ defineExpose({ getRef });
         </el-form-item>
       </re-col>
 
-      <re-col v-if="newFormInline.menuType !== 3" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-if="newFormInline.menu_type !== 3"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="路由路径" prop="path">
           <el-input
             v-model="newFormInline.path"
@@ -124,7 +134,7 @@ defineExpose({ getRef });
         </el-form-item>
       </re-col>
       <re-col
-        v-show="newFormInline.menuType === 0"
+        v-show="newFormInline.menu_type === 0"
         :value="12"
         :xs="24"
         :sm="24"
@@ -150,7 +160,7 @@ defineExpose({ getRef });
         </el-form-item>
       </re-col>
       <re-col
-        v-show="newFormInline.menuType === 0"
+        v-show="newFormInline.menu_type === 0"
         :value="12"
         :xs="24"
         :sm="24"
@@ -165,7 +175,7 @@ defineExpose({ getRef });
       </re-col>
 
       <re-col
-        v-show="newFormInline.menuType !== 3"
+        v-show="newFormInline.menu_type !== 3"
         :value="12"
         :xs="24"
         :sm="24"
@@ -175,52 +185,67 @@ defineExpose({ getRef });
         </el-form-item>
       </re-col>
       <re-col
-        v-show="newFormInline.menuType !== 3"
+        v-show="newFormInline.menu_type !== 3"
         :value="12"
         :xs="24"
         :sm="24"
       >
         <el-form-item label="右侧图标">
           <el-input
-            v-model="newFormInline.extraIcon"
+            v-model="newFormInline.extra_icon"
             clearable
             placeholder="菜单名称右侧的额外图标"
           />
         </el-form-item>
       </re-col>
 
-      <re-col v-show="newFormInline.menuType < 2" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-show="newFormInline.menu_type < 2"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="进场动画">
           <ReAnimateSelector
-            v-model="newFormInline.enterTransition"
+            v-model="newFormInline.enter_transition"
             placeholder="请选择页面进场加载动画"
           />
         </el-form-item>
       </re-col>
-      <re-col v-show="newFormInline.menuType < 2" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-show="newFormInline.menu_type < 2"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="离场动画">
           <ReAnimateSelector
-            v-model="newFormInline.leaveTransition"
+            v-model="newFormInline.leave_transition"
             placeholder="请选择页面离场加载动画"
           />
         </el-form-item>
       </re-col>
 
       <re-col
-        v-show="newFormInline.menuType === 0"
+        v-show="newFormInline.menu_type === 0"
         :value="12"
         :xs="24"
         :sm="24"
       >
         <el-form-item label="菜单激活">
           <el-input
-            v-model="newFormInline.activePath"
+            v-model="newFormInline.active_path"
             clearable
             placeholder="请输入需要激活的菜单"
           />
         </el-form-item>
       </re-col>
-      <re-col v-if="newFormInline.menuType === 3" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-if="newFormInline.menu_type === 3"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <!-- 按钮级别权限设置 -->
         <el-form-item label="权限标识" prop="auths">
           <el-input
@@ -232,7 +257,7 @@ defineExpose({ getRef });
       </re-col>
 
       <re-col
-        v-show="newFormInline.menuType === 1"
+        v-show="newFormInline.menu_type === 1"
         :value="12"
         :xs="24"
         :sm="24"
@@ -240,20 +265,25 @@ defineExpose({ getRef });
         <!-- iframe -->
         <el-form-item label="链接地址">
           <el-input
-            v-model="newFormInline.frameSrc"
+            v-model="newFormInline.frame_src"
             clearable
             placeholder="请输入 iframe 链接地址"
           />
         </el-form-item>
       </re-col>
-      <re-col v-if="newFormInline.menuType === 1" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-if="newFormInline.menu_type === 1"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="加载动画">
           <Segmented
-            :modelValue="newFormInline.frameLoading ? 0 : 1"
-            :options="frameLoadingOptions"
+            :modelValue="newFormInline.frame_loading ? 0 : 1"
+            :options="frame_loading_options"
             @change="
               ({ option: { value } }) => {
-                newFormInline.frameLoading = value;
+                newFormInline.frame_loading = value;
               }
             "
           />
@@ -261,77 +291,92 @@ defineExpose({ getRef });
       </re-col>
 
       <re-col
-        v-show="newFormInline.menuType !== 3"
+        v-show="newFormInline.menu_type !== 3"
         :value="12"
         :xs="24"
         :sm="24"
       >
         <el-form-item label="菜单">
           <Segmented
-            :modelValue="newFormInline.showLink ? 0 : 1"
-            :options="showLinkOptions"
+            :modelValue="newFormInline.show_link ? 0 : 1"
+            :options="show_link_options"
             @change="
               ({ option: { value } }) => {
-                newFormInline.showLink = value;
+                newFormInline.show_link = value;
               }
             "
           />
         </el-form-item>
       </re-col>
       <re-col
-        v-show="newFormInline.menuType !== 3"
+        v-show="newFormInline.menu_type !== 3"
         :value="12"
         :xs="24"
         :sm="24"
       >
         <el-form-item label="父级菜单">
           <Segmented
-            :modelValue="newFormInline.showParent ? 0 : 1"
-            :options="showParentOptions"
+            :modelValue="newFormInline.show_parent ? 0 : 1"
+            :options="show_parent_options"
             @change="
               ({ option: { value } }) => {
-                newFormInline.showParent = value;
+                newFormInline.show_parent = value;
               }
             "
           />
         </el-form-item>
       </re-col>
 
-      <re-col v-show="newFormInline.menuType < 2" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-show="newFormInline.menu_type < 2"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="缓存页面">
           <Segmented
-            :modelValue="newFormInline.keepAlive ? 0 : 1"
-            :options="keepAliveOptions"
+            :modelValue="newFormInline.keep_alive ? 0 : 1"
+            :options="keep_alive_options"
             @change="
               ({ option: { value } }) => {
-                newFormInline.keepAlive = value;
+                newFormInline.keep_alive = value;
               }
             "
           />
         </el-form-item>
       </re-col>
 
-      <re-col v-show="newFormInline.menuType < 2" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-show="newFormInline.menu_type < 2"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="标签页">
           <Segmented
-            :modelValue="newFormInline.hiddenTag ? 1 : 0"
-            :options="hiddenTagOptions"
+            :modelValue="newFormInline.hidden_tag ? 1 : 0"
+            :options="hidden_tag_options"
             @change="
               ({ option: { value } }) => {
-                newFormInline.hiddenTag = value;
+                newFormInline.hidden_tag = value;
               }
             "
           />
         </el-form-item>
       </re-col>
-      <re-col v-show="newFormInline.menuType < 2" :value="12" :xs="24" :sm="24">
+      <re-col
+        v-show="newFormInline.menu_type < 2"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
         <el-form-item label="固定标签页">
           <Segmented
-            :modelValue="newFormInline.fixedTag ? 0 : 1"
-            :options="fixedTagOptions"
+            :modelValue="newFormInline.fixed_tag ? 0 : 1"
+            :options="fixed_tag_options"
             @change="
               ({ option: { value } }) => {
-                newFormInline.fixedTag = value;
+                newFormInline.fixed_tag = value;
               }
             "
           />

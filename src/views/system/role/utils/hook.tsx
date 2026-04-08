@@ -11,6 +11,7 @@ import type { PaginationProps } from "@pureadmin/table";
 import { getKeyList, deviceDetection } from "@pureadmin/utils";
 import { getRoleList, getRoleMenu, getRoleMenuIds } from "@/api/system";
 import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
+import { roleApi } from "@/api/role";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
@@ -92,16 +93,6 @@ export function useRole(treeRef: Ref) {
       slot: "operation"
     }
   ];
-  // const buttonClass = computed(() => {
-  //   return [
-  //     "h-5!",
-  //     "reset-margin",
-  //     "text-gray-500!",
-  //     "dark:text-white!",
-  //     "dark:hover:text-primary!"
-  //   ];
-  // });
-
   function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
@@ -118,7 +109,7 @@ export function useRole(treeRef: Ref) {
         draggable: true
       }
     )
-      .then(() => {
+      .then(async () => {
         switchLoadMap.value[index] = Object.assign(
           {},
           switchLoadMap.value[index],
@@ -126,6 +117,7 @@ export function useRole(treeRef: Ref) {
             loading: true
           }
         );
+        await roleApi.update(row.id, { status: row.status });
         setTimeout(() => {
           switchLoadMap.value[index] = Object.assign(
             {},
@@ -143,10 +135,18 @@ export function useRole(treeRef: Ref) {
         row.status === 0 ? (row.status = 1) : (row.status = 0);
       });
   }
-
-  function handleDelete(row) {
-    message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
-    onSearch();
+  /**
+   * 删除角色
+   * @param row
+   */
+  async function handleDelete(row) {
+    const res = await roleApi.delete(row.id);
+    if (res.code === 20000) {
+      message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
+      onSearch();
+    } else {
+      message(res.message, { type: "error" });
+    }
   }
 
   function handleSizeChange(val: number) {
@@ -187,6 +187,7 @@ export function useRole(treeRef: Ref) {
       title: `${title}角色`,
       props: {
         formInline: {
+          id: row?.id ?? "",
           name: row?.name ?? "",
           code: row?.code ?? "",
           remark: row?.remark ?? ""
@@ -208,14 +209,16 @@ export function useRole(treeRef: Ref) {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
+              const res = await roleApi.create(curData);
               // 实际开发先调用新增接口，再进行下面操作
               chores();
             } else {
+              const res = await roleApi.update(curData.id, curData);
               // 实际开发先调用修改接口，再进行下面操作
               chores();
             }

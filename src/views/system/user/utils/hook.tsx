@@ -10,6 +10,7 @@ import { usePublicHooks } from "../../hooks";
 import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
 import ReCropperPreview from "@/components/ReCropperPreview";
+import { userApi } from "@/api/user";
 import type { FormItemProps, RoleFormItemProps } from "../utils/types";
 import {
   getKeyList,
@@ -41,12 +42,22 @@ import {
   onMounted
 } from "vue";
 
+/** 加密密码 */
+async function encryptPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hash));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  return hashHex;
+}
+
 export function useUser(tableRef: Ref, treeRef: Ref) {
   const form = reactive({
     // 左侧部门树的id
     deptId: "",
     username: "",
-    phone: "",
+    mobile: "",
     status: ""
   });
   const formRef = ref();
@@ -76,7 +87,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     },
     {
       label: "用户编号",
-      prop: "id",
+      prop: "_id",
       width: 90
     },
     {
@@ -105,15 +116,15 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     },
     {
       label: "性别",
-      prop: "sex",
+      prop: "gender",
       minWidth: 90,
       cellRenderer: ({ row, props }) => (
         <el-tag
           size={props.size}
-          type={row.sex === 1 ? "danger" : null}
+          type={row.gender === 1 ? "danger" : null}
           effect="plain"
         >
-          {row.sex === 1 ? "女" : "男"}
+          {row.gender === 1 ? "男" : row.gender === 0 ? "未知" : "女"}
         </el-tag>
       )
     },
@@ -124,9 +135,9 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     },
     {
       label: "手机号码",
-      prop: "phone",
+      prop: "mobile",
       minWidth: 90,
-      formatter: ({ phone }) => hideTextAtIndex(phone, { start: 3, end: 6 })
+      formatter: ({ mobile }) => hideTextAtIndex(mobile, { start: 3, end: 6 })
     },
     {
       label: "状态",
@@ -150,9 +161,9 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     {
       label: "创建时间",
       minWidth: 90,
-      prop: "createTime",
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      prop: "register_date",
+      formatter: ({ register_date }) =>
+        dayjs(register_date).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "操作",
@@ -201,7 +212,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         draggable: true
       }
     )
-      .then(() => {
+      .then(async () => {
         switchLoadMap.value[index] = Object.assign(
           {},
           switchLoadMap.value[index],
@@ -209,6 +220,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             loading: true
           }
         );
+        await userApi.update(row._id, { status: row.status });
         setTimeout(() => {
           switchLoadMap.value[index] = Object.assign(
             {},
@@ -231,8 +243,10 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     console.log(row);
   }
 
-  function handleDelete(row) {
-    message(`您删除了用户编号为${row.id}的这条数据`, { type: "success" });
+  async function handleDelete(row) {
+    const res = await userApi.delete(row._id);
+    console.log(res);
+    message(`您删除了用户编号为${row._id}的这条数据`, { type: "success" });
     onSearch();
   }
 
@@ -263,7 +277,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     // 返回当前选中的行
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
     // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
-    message(`已删除用户编号为 ${getKeyList(curSelected, "id")} 的数据`, {
+    message(`已删除用户编号为 ${getKeyList(curSelected, "_id")} 的数据`, {
       type: "success"
     });
     tableRef.value.getTableRef().clearSelection();
@@ -315,15 +329,16 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       title: `${title}用户`,
       props: {
         formInline: {
+          _id: row?._id ?? "",
           title,
           higherDeptOptions: formatHigherDeptOptions(higherDeptOptions.value),
-          parentId: row?.dept.id ?? 0,
+          parentId: row?.dept?.id ?? 0,
           nickname: row?.nickname ?? "",
           username: row?.username ?? "",
           password: row?.password ?? "",
-          phone: row?.phone ?? "",
+          mobile: row?.mobile ?? "",
           email: row?.email ?? "",
-          sex: row?.sex ?? "",
+          gender: row?.gender ?? 0,
           status: row?.status ?? 1,
           remark: row?.remark ?? ""
         }
@@ -334,7 +349,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
+      beforeSure: async (done, { options }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
         function chores() {
@@ -344,14 +359,22 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
+              // 对密码进行加密
+              curData.password = await encryptPassword(curData.password);
+              userApi.create(curData);
               // 实际开发先调用新增接口，再进行下面操作
               chores();
             } else {
+              // 如果修改时也需要密码加密
+              if (curData.password) {
+                curData.password = await encryptPassword(curData.password);
+              }
+              userApi.update(curData._id, curData);
               // 实际开发先调用修改接口，再进行下面操作
               chores();
             }
@@ -448,15 +471,17 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         </>
       ),
       closeCallBack: () => (pwdForm.newPwd = ""),
-      beforeSure: done => {
-        ruleFormRef.value.validate(valid => {
+      beforeSure: async done => {
+        ruleFormRef.value.validate(async valid => {
           if (valid) {
             // 表单规则校验通过
+            // 对新密码进行加密
+            const encryptedPassword = await encryptPassword(pwdForm.newPwd);
             message(`已成功重置 ${row.username} 用户的密码`, {
               type: "success"
             });
-            console.log(pwdForm.newPwd);
-            // 根据实际业务使用pwdForm.newPwd和row里的某些字段去调用重置用户密码接口即可
+            console.log(encryptedPassword);
+            // 根据实际业务使用encryptedPassword和row里的某些字段去调用重置用户密码接口即可
             done(); // 关闭弹框
             onSearch(); // 刷新表格数据
           }

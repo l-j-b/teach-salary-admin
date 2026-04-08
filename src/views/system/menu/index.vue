@@ -66,7 +66,7 @@ function onFullscreen() {
     </el-form>
 
     <PureTableBar
-      title="菜单管理（仅演示，操作后不生效）"
+      title="菜单管理"
       :columns="columns"
       :isExpandAll="false"
       :tableRef="tableRef?.getTableRef()"
@@ -113,13 +113,13 @@ function onFullscreen() {
               修改
             </el-button>
             <el-button
-              v-show="row.menuType !== 3"
+              v-show="row.menu_type !== 3"
               class="reset-margin"
               link
               type="primary"
               :size="size"
               :icon="useRenderIcon(AddFill)"
-              @click="openDialog('新增', { parentId: row.id } as any)"
+              @click="openDialog('新增', { parent_id: row.id } as any)"
             >
               新增
             </el-button>

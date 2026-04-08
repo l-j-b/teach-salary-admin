@@ -92,3 +92,31 @@ export const getMine = (data?: object) => {
 export const getMineLogs = (data?: object) => {
   return http.request<ResultTable>("get", "/mine-logs", { data });
 };
+
+export const userApi = {
+  /**
+   *
+   * @param id
+   * @returns
+   */
+  delete: (id: string) => {
+    return http.request<RefreshTokenResult>("delete", "/user/delete/" + id);
+  },
+  /**
+   *
+   * @param data
+   * @returns
+   */
+  create: (data?: object) => {
+    return http.request<UserResult>("put", "/user/create", { data });
+  },
+  /**
+   *
+   * @param id
+   * @param data
+   * @returns
+   */
+  update: (id: string, data?: object) => {
+    return http.request<UserResult>("post", "/user/update/" + id, { data });
+  }
+};

@@ -7,9 +7,9 @@ interface FormItemProps {
   nickname: string;
   username: string;
   password: string;
-  phone: string | number;
+  mobile: string | number;
   email: string;
-  sex: string | number;
+  gender: string | number;
   status: number;
   dept?: {
     id?: number;

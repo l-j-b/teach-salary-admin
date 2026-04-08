@@ -1,6 +1,6 @@
 import type { OptionsType } from "@/components/ReSegmented";
 
-const menuTypeOptions: Array<OptionsType> = [
+const menu_type_options: Array<OptionsType> = [
   {
     label: "菜单",
     value: 0
@@ -19,7 +19,7 @@ const menuTypeOptions: Array<OptionsType> = [
   }
 ];
 
-const showLinkOptions: Array<OptionsType> = [
+const show_link_options: Array<OptionsType> = [
   {
     label: "显示",
     tip: "会在菜单中显示",
@@ -32,7 +32,7 @@ const showLinkOptions: Array<OptionsType> = [
   }
 ];
 
-const fixedTagOptions: Array<OptionsType> = [
+const fixed_tag_options: Array<OptionsType> = [
   {
     label: "固定",
     tip: "当前菜单名称固定显示在标签页且不可关闭",
@@ -45,7 +45,7 @@ const fixedTagOptions: Array<OptionsType> = [
   }
 ];
 
-const keepAliveOptions: Array<OptionsType> = [
+const keep_alive_options: Array<OptionsType> = [
   {
     label: "缓存",
     tip: "会保存该页面的整体状态，刷新后会清空状态",
@@ -58,7 +58,7 @@ const keepAliveOptions: Array<OptionsType> = [
   }
 ];
 
-const hiddenTagOptions: Array<OptionsType> = [
+const hidden_tag_options: Array<OptionsType> = [
   {
     label: "允许",
     tip: "当前菜单名称或自定义信息允许添加到标签页",
@@ -71,7 +71,7 @@ const hiddenTagOptions: Array<OptionsType> = [
   }
 ];
 
-const showParentOptions: Array<OptionsType> = [
+const show_parent_options: Array<OptionsType> = [
   {
     label: "显示",
     tip: "会显示父级菜单",
@@ -84,7 +84,7 @@ const showParentOptions: Array<OptionsType> = [
   }
 ];
 
-const frameLoadingOptions: Array<OptionsType> = [
+const frame_loading_options: Array<OptionsType> = [
   {
     label: "开启",
     tip: "有首次加载动画",
@@ -98,11 +98,11 @@ const frameLoadingOptions: Array<OptionsType> = [
 ];
 
 export {
-  menuTypeOptions,
-  showLinkOptions,
-  fixedTagOptions,
-  keepAliveOptions,
-  hiddenTagOptions,
-  showParentOptions,
-  frameLoadingOptions
+  menu_type_options,
+  show_link_options,
+  fixed_tag_options,
+  keep_alive_options,
+  hidden_tag_options,
+  show_parent_options,
+  frame_loading_options
 };

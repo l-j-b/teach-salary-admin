@@ -5,7 +5,7 @@ export default defineFakeRoute([
   // 用户管理
   {
     url: "/v1/user",
-    method: "post",
+    method: "get",
     response: ({ body }) => {
       let list = [
         {
@@ -149,7 +149,7 @@ export default defineFakeRoute([
   // 角色管理-权限-菜单权限
   {
     url: "/v1/role-menu",
-    method: "post",
+    method: "get",
     response: () => {
       return {
         code: 20000,
@@ -353,7 +353,7 @@ export default defineFakeRoute([
   // 角色管理-权限-菜单权限-根据角色 id 查对应菜单
   {
     url: "/v1/role-menu-ids",
-    method: "post",
+    method: "get",
     response: ({ body }) => {
       if (body.id == 1) {
         return {
@@ -380,7 +380,7 @@ export default defineFakeRoute([
   // 菜单管理
   {
     url: "/v1/menu",
-    method: "post",
+    method: "get",
     response: () => {
       return {
         code: 20000,
@@ -1262,7 +1262,7 @@ export default defineFakeRoute([
   // 部门管理
   {
     url: "/v1/dept",
-    method: "post",
+    method: "get",
     response: () => {
       return {
         code: 20000,

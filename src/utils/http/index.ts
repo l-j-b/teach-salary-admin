@@ -14,6 +14,7 @@ import { message } from "@/utils/message";
 import { $t, transformI18n } from "@/plugins/i18n";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+import router from "@/router";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -172,6 +173,13 @@ class PureHttp {
           resolve(response);
         })
         .catch(error => {
+          if (error.response && error.response.status === 401) {
+            useUserStoreHook().logOut();
+            message(transformI18n($t("login.pureLoginExpired")), {
+              type: "warning"
+            });
+            router.push({ name: "login" });
+          }
           reject(error);
         });
     });

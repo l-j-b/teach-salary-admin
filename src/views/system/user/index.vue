@@ -76,9 +76,9 @@ const {
             class="w-45!"
           />
         </el-form-item>
-        <el-form-item label="手机号码：" prop="phone">
+        <el-form-item label="手机号码：" prop="mobile">
           <el-input
-            v-model="form.phone"
+            v-model="form.mobile"
             placeholder="请输入手机号码"
             clearable
             class="w-45!"
@@ -110,11 +110,7 @@ const {
         </el-form-item>
       </el-form>
 
-      <PureTableBar
-        title="用户管理（仅演示，操作后不生效）"
-        :columns="columns"
-        @refresh="onSearch"
-      >
+      <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
         <template #buttons>
           <el-button
             type="primary"
@@ -181,7 +177,7 @@ const {
                 修改
               </el-button>
               <el-popconfirm
-                :title="`是否确认删除用户编号为${row.id}的这条数据`"
+                :title="`是否确认删除用户编号为${row._id}的这条数据`"
                 @confirm="handleDelete(row)"
               >
                 <template #reference>

@@ -49,15 +49,15 @@ export function useMenu() {
     },
     {
       label: "菜单类型",
-      prop: "menuType",
+      prop: "menu_type",
       width: 100,
       cellRenderer: ({ row, props }) => (
         <el-tag
           size={props.size}
-          type={getMenuType(row.menuType) as any}
+          type={getMenuType(row.menu_type) as any}
           effect="plain"
         >
-          {getMenuType(row.menuType, true)}
+          {getMenuType(row.menu_type, true)}
         </el-tag>
       )
     },
@@ -82,8 +82,8 @@ export function useMenu() {
     },
     {
       label: "隐藏",
-      prop: "showLink",
-      formatter: ({ showLink }) => (showLink ? "否" : "是"),
+      prop: "show_link",
+      formatter: ({ show_link }) => (show_link ? "否" : "是"),
       width: 100
     },
     {
@@ -139,9 +139,11 @@ export function useMenu() {
       title: `${title}菜单`,
       props: {
         formInline: {
-          menuType: row?.menuType ?? 0,
-          higherMenuOptions: formatHigherMenuOptions(cloneDeep(dataList.value)),
-          parentId: row?.parentId ?? 0,
+          menu_type: row?.menu_type ?? 0,
+          higher_menu_options: formatHigherMenuOptions(
+            cloneDeep(dataList.value)
+          ),
+          parent_id: row?.parent_id ?? 0,
           title: row?.title ?? "",
           name: row?.name ?? "",
           path: row?.path ?? "",
@@ -149,18 +151,18 @@ export function useMenu() {
           rank: row?.rank ?? 99,
           redirect: row?.redirect ?? "",
           icon: row?.icon ?? "",
-          extraIcon: row?.extraIcon ?? "",
-          enterTransition: row?.enterTransition ?? "",
-          leaveTransition: row?.leaveTransition ?? "",
-          activePath: row?.activePath ?? "",
+          extra_icon: row?.extra_icon ?? "",
+          enter_transition: row?.enter_transition ?? "",
+          leave_transition: row?.leave_transition ?? "",
+          active_path: row?.active_path ?? "",
           auths: row?.auths ?? "",
-          frameSrc: row?.frameSrc ?? "",
-          frameLoading: row?.frameLoading ?? true,
-          keepAlive: row?.keepAlive ?? false,
-          hiddenTag: row?.hiddenTag ?? false,
-          fixedTag: row?.fixedTag ?? false,
-          showLink: row?.showLink ?? true,
-          showParent: row?.showParent ?? false
+          frame_src: row?.frame_src ?? "",
+          frame_loading: row?.frame_loading ?? true,
+          keep_alive: row?.keep_alive ?? false,
+          hidden_tag: row?.hidden_tag ?? false,
+          fixed_tag: row?.fixed_tag ?? false,
+          show_link: row?.show_link ?? true,
+          show_parent: row?.show_parent ?? false
         }
       },
       width: "45%",

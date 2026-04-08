@@ -76,7 +76,7 @@ function onFullscreen() {
     </el-form>
 
     <PureTableBar
-      title="部门管理（仅演示，操作后不生效）"
+      title="部门管理"
       :columns="columns"
       :tableRef="tableRef?.getTableRef()"
       @refresh="onSearch"
@@ -128,7 +128,7 @@ function onFullscreen() {
               type="primary"
               :size="size"
               :icon="useRenderIcon(AddFill)"
-              @click="openDialog('新增', { parentId: row.id } as any)"
+              @click="openDialog('新增', { parent_id: row.id } as any)"
             >
               新增
             </el-button>
