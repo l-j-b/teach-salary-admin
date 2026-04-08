@@ -2,19 +2,11 @@ import { defineFakeRoute } from "vite-plugin-fake-server/client";
 
 export default defineFakeRoute([
   {
-<<<<<<< HEAD
     url: "/v1/get-card-list",
     method: "post",
     response: () => {
       return {
         code: 20000,
-=======
-    url: "/get-card-list",
-    method: "post",
-    response: () => {
-      return {
-        code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
         message: "操作成功",
         data: {
           list: [

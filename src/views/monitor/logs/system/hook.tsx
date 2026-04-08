@@ -205,11 +205,7 @@ export function useRole(tableRef: Ref) {
   async function onSearch() {
     loading.value = true;
     const { code, data } = await getSystemLogsList(toRaw(form));
-<<<<<<< HEAD
     if (code === 20000) {
-=======
-    if (code === 0) {
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       dataList.value = data.list;
       pagination.total = data.total;
       pagination.pageSize = data.pageSize;

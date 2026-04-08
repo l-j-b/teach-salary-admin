@@ -20,12 +20,8 @@ const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
   timeout: 10000,
   // 后端API基础路径
-<<<<<<< HEAD
   // baseURL: "/v1",
   baseURL: "http://localhost:3001/v1",
-=======
-  baseURL: "http://localhost:3001",
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
   headers: {
     Accept: "application/json, text/plain, */*",
     "Content-Type": "application/json",

@@ -82,11 +82,7 @@ app.post('/login', (req, res) => {
 
     // 返回数据
     res.json({
-<<<<<<< HEAD
       code: 20000,
-=======
-      code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       message: '登录成功',
       data: {
         accessToken,
@@ -136,11 +132,7 @@ app.post('/refresh-token', (req, res) => {
 
     // 返回数据
     res.json({
-<<<<<<< HEAD
       code: 20000,
-=======
-      code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       message: '令牌刷新成功',
       data: {
         accessToken: newAccessToken,
@@ -176,11 +168,7 @@ app.get('/verify-token', (req, res) => {
     }
 
     res.json({
-<<<<<<< HEAD
       code: 20000,
-=======
-      code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       message: '令牌有效',
       data: {
         id: user.id,
@@ -212,11 +200,7 @@ app.get('/test', (req, res) => {
     }
 
     res.json({
-<<<<<<< HEAD
       code: 20000,
-=======
-      code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       message: '测试成功',
       data: {
         user: decoded
@@ -231,8 +215,4 @@ app.get('/test', (req, res) => {
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`服务器运行在 http://localhost:${PORT}`);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e

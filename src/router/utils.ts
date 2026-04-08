@@ -210,11 +210,7 @@ function initRouter() {
     } else {
       return new Promise(resolve => {
         getAsyncRoutes().then(({ code, data }) => {
-<<<<<<< HEAD
           if (code === 20000) {
-=======
-          if (code === 0) {
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
             handleAsyncRoutes(cloneDeep(data));
             storageLocal().setItem(key, data);
             resolve(router);
@@ -227,11 +223,7 @@ function initRouter() {
   } else {
     return new Promise(resolve => {
       getAsyncRoutes().then(({ code, data }) => {
-<<<<<<< HEAD
         if (code === 20000) {
-=======
-        if (code === 0) {
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
           handleAsyncRoutes(cloneDeep(data));
           resolve(router);
         } else {

@@ -3,21 +3,12 @@ import { defineFakeRoute } from "vite-plugin-fake-server/client";
 
 export default defineFakeRoute([
   {
-<<<<<<< HEAD
     url: "/v1/login/in",
     method: "put",
     response: ({ body }) => {
       if (body.username === "admin") {
         return {
           code: 20000,
-=======
-    url: "/login",
-    method: "post",
-    response: ({ body }) => {
-      if (body.username === "admin") {
-        return {
-          code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
           message: "操作成功",
           data: {
             avatar: "https://avatars.githubusercontent.com/u/44761321",
@@ -34,11 +25,7 @@ export default defineFakeRoute([
         };
       } else {
         return {
-<<<<<<< HEAD
           code: 20000,
-=======
-          code: 0,
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
           message: "操作成功",
           data: {
             avatar: "https://avatars.githubusercontent.com/u/52823142",

@@ -93,11 +93,7 @@ onBeforeMount(() => {
       // 获取模拟车辆信息
       mapJson()
         .then(({ code, data }) => {
-<<<<<<< HEAD
           if (code === 20000) {
-=======
-          if (code === 0) {
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
             const points: object = data.map(v => {
               return {
                 lnglat: [v.lng, v.lat],

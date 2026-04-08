@@ -39,11 +39,7 @@ const dataLoading = ref(true);
 const getCardListData = async () => {
   try {
     const { code, data } = await getCardList();
-<<<<<<< HEAD
     if (code === 20000) {
-=======
-    if (code === 0) {
->>>>>>> 48e266b4e34226a4569d088cc16c1a27abf08e4e
       productList.value = data.list;
       pagination.value = {
         ...pagination.value,
