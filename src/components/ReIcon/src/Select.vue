@@ -42,8 +42,8 @@ const tabsList = [
 
 const pageList = computed(() =>
   copyIconList[currentActiveType.value]
-    .filter(i => i.includes(filterValue.value))
-    .slice(
+    ?.filter(i => i.includes(filterValue.value))
+    ?.slice(
       (currentPage.value - 1) * pageSize.value,
       currentPage.value * pageSize.value
     )
@@ -72,7 +72,7 @@ function onBeforeEnter() {
   if (isAllEmpty(icon.value)) return;
   setVal();
   // 寻找当前图标在第几页
-  const curIconIndex = copyIconList[currentActiveType.value].findIndex(
+  const curIconIndex = copyIconList[currentActiveType.value]?.findIndex(
     i => i === icon.value
   );
   currentPage.value = Math.ceil((curIconIndex + 1) / pageSize.value);
@@ -173,7 +173,7 @@ watch(
                   </li>
                 </ul>
                 <el-empty
-                  v-show="pageList.length === 0"
+                  v-show="pageList?.length === 0"
                   :description="`${filterValue} 图标不存在`"
                   :image-size="60"
                 />

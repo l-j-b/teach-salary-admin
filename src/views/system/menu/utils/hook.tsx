@@ -1,4 +1,5 @@
 import editForm from "../form.vue";
+import { menuApi } from "@/api/menu";
 import { handleTree } from "@/utils/tree";
 import { message } from "@/utils/message";
 import { getMenuList } from "@/api/system";
@@ -106,7 +107,7 @@ export function useMenu() {
 
   async function onSearch() {
     loading.value = true;
-    const { code, data } = await getMenuList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parentId，parentId取父节点id
+    const { code, data } = await getMenuList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parent_id，parent_id取父节点id
     if (code === 20000) {
       let newData = data;
       if (!isAllEmpty(form.title)) {
@@ -139,6 +140,7 @@ export function useMenu() {
       title: `${title}菜单`,
       props: {
         formInline: {
+          id: row?.id ?? "",
           menu_type: row?.menu_type ?? 0,
           higher_menu_options: formatHigherMenuOptions(
             cloneDeep(dataList.value)
@@ -184,16 +186,29 @@ export function useMenu() {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
+            let res = null;
             if (title === "新增") {
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
+              res = await menuApi.create(curData);
+              if (res.code === 20000) {
+                // 实际开发先调用新增接口，再进行下面操作
+                chores();
+              }
             } else {
+              res = await menuApi.update(curData.id, curData);
               // 实际开发先调用修改接口，再进行下面操作
-              chores();
+              if (res.code === 20000) {
+                // 实际开发先调用新增接口，再进行下面操作
+                chores();
+              }
+            }
+            if (res.code !== 20000) {
+              message(res.message, {
+                type: "error"
+              });
             }
           }
         });
@@ -201,11 +216,18 @@ export function useMenu() {
     });
   }
 
-  function handleDelete(row) {
-    message(`您删除了菜单名称为${transformI18n(row.title)}的这条数据`, {
-      type: "success"
-    });
-    onSearch();
+  async function handleDelete(row) {
+    const res = await menuApi.delete(row.id);
+    if (res.code === 20000) {
+      message(`您删除了菜单名称为${transformI18n(row.title)}的这条数据`, {
+        type: "success"
+      });
+      onSearch();
+    } else {
+      message(res.message, {
+        type: "error"
+      });
+    }
   }
 
   onMounted(() => {

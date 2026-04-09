@@ -7,6 +7,7 @@ const {
   generateRefreshToken,
   verifyToken
 } = require("./jwt");
+const menuRouter = require("./menu");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +16,9 @@ const PORT = process.env.PORT || 3001;
 // 中间件
 app.use(cors());
 app.use(express.json());
+
+// 菜单路由
+app.use('/menu', menuRouter);
 
 // 登录接口
 app.post("/login", async (req, res) => {

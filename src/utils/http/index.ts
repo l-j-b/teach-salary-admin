@@ -15,14 +15,14 @@ import { $t, transformI18n } from "@/plugins/i18n";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import router from "@/router";
-
+const { VITE_BASE_URL } = import.meta.env;
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
   timeout: 10000,
   // 后端API基础路径
   // baseURL: "/v1",
-  baseURL: "http://localhost:3001/v1",
+  baseURL: VITE_BASE_URL,
   headers: {
     Accept: "application/json, text/plain, */*",
     "Content-Type": "application/json",
