@@ -139,18 +139,26 @@ export function useDept() {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
-              deptApi.create(curData);
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
+              const res = await deptApi.create(curData);
+              if (res.code === 20000) {
+                chores();
+              } else {
+                // 实际开发先调用新增接口，再进行下面操作
+                message(res.message, { type: "error" });
+              }
             } else {
-              deptApi.update(curData.id, curData);
-              // 实际开发先调用修改接口，再进行下面操作
-              chores();
+              const res = await deptApi.update(curData.id, curData);
+              if (res.code === 20000) {
+                // 实际开发先调用修改接口，再进行下面操作
+                chores();
+              } else {
+                message(res.message, { type: "error" });
+              }
             }
           }
         });

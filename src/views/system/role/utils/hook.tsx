@@ -12,6 +12,7 @@ import { getKeyList, deviceDetection } from "@pureadmin/utils";
 import { getRoleList, getRoleMenu, getRoleMenuIds } from "@/api/system";
 import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
 import { roleApi } from "@/api/role";
+import { roleMenuApi } from "@/api/roleMenu";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
@@ -81,10 +82,10 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "创建时间",
-      prop: "createTime",
+      prop: "create_time",
       minWidth: 160,
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      formatter: ({ create_time }) =>
+        dayjs(create_time).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "操作",
@@ -253,13 +254,21 @@ export function useRole(treeRef: Ref) {
   }
 
   /** 菜单权限-保存 */
-  function handleSave() {
+  async function handleSave() {
     const { id, name } = curRow.value;
-    // 根据用户 id 调用实际项目中菜单权限修改接口
-    console.log(id, treeRef.value.getCheckedKeys());
-    message(`角色名称为${name}的菜单权限修改成功`, {
-      type: "success"
-    });
+    const data = treeRef.value.getCheckedKeys();
+    const res = await roleMenuApi.batchCreate({ role_id: id, menu_ids: data });
+    // console.log(id, treeRef.value.getCheckedKeys());
+    if (res.code === 20000) {
+      // 根据用户 id 调用实际项目中菜单权限修改接口
+      message(`角色名称为${name}的菜单权限修改成功`, {
+        type: "success"
+      });
+    } else {
+      message(res.message, {
+        type: "error"
+      });
+    }
   }
 
   /** 数据权限 可自行开发 */

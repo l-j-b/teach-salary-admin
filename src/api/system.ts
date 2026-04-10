@@ -28,12 +28,12 @@ export const getUserList = (params?: object) => {
 
 /** 系统管理-用户管理-获取所有角色列表 */
 export const getAllRoleList = () => {
-  return http.request<Result>("get", "/list-all-role");
+  return http.request<Result>("get", "/role/all-list");
 };
 
 /** 系统管理-用户管理-根据userId，获取对应角色id列表（userId：用户id） */
 export const getRoleIds = (data?: object) => {
-  return http.request<Result>("post", "/list-role-ids", { data });
+  return http.request<Result>("post", "/user-role/ids", { data });
 };
 
 /** 获取系统管理-角色管理列表 */
@@ -83,5 +83,5 @@ export const getRoleMenu = (params?: object) => {
 
 /** 获取角色管理-权限-菜单权限-根据角色 id 查对应菜单 */
 export const getRoleMenuIds = (params?: object) => {
-  return http.request<Result>("get", "/role-menu-ids", { params });
+  return http.request<Result>("get", "/role-menu/ids", { params });
 };

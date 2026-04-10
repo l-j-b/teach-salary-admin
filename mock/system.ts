@@ -63,7 +63,7 @@ export default defineFakeRoute([
   },
   // 用户管理-获取所有角色列表
   {
-    url: "/v1/list-all-role",
+    url: "/v1/role/all-list",
     method: "get",
     response: () => {
       return {
@@ -78,7 +78,7 @@ export default defineFakeRoute([
   },
   // 用户管理-根据 userId 获取对应角色 id 列表（userId：用户id）
   {
-    url: "/v1/list-role-ids",
+    url: "/v1/user-role/ids",
     method: "post",
     response: ({ body }) => {
       if (body.userId) {
@@ -107,9 +107,13 @@ export default defineFakeRoute([
   // 角色管理
   {
     url: "/v1/role",
-    method: "post",
-    response: ({ body }) => {
-      let list = [
+    method: "get",
+    response: req => {
+      const { params } = req;
+      debugger;
+      console.log("req.params", req);
+      const body = params;
+      const list = [
         {
           createTime: 1605456000000, // 时间戳（毫秒ms）
           updateTime: 1684512000000,
@@ -129,11 +133,11 @@ export default defineFakeRoute([
           remark: "普通角色拥有部分权限"
         }
       ];
-      list = list.filter(item => item.name.includes(body?.name));
-      list = list.filter(item =>
-        String(item.status).includes(String(body?.status))
-      );
-      if (body.code) list = list.filter(item => item.code === body.code);
+      // list = list.filter(item => item.name.includes(body?.name));
+      // list = list.filter(item =>
+      //   String(item.status).includes(String(body?.status))
+      // );
+      // if (body.code) list = list.filter(item => item.code === body.code);
       return {
         code: 20000,
         message: "操作成功",
@@ -157,191 +161,191 @@ export default defineFakeRoute([
         data: [
           // 外部页面
           {
-            parentId: 0,
+            parent_id: 0,
             id: 100,
             menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
             title: "menus.pureExternalPage"
           },
           {
-            parentId: 100,
+            parent_id: 100,
             id: 101,
             menuType: 0,
             title: "menus.pureExternalDoc"
           },
           {
-            parentId: 101,
+            parent_id: 101,
             id: 102,
             menuType: 2,
             title: "menus.pureExternalLink"
           },
           {
-            parentId: 101,
+            parent_id: 101,
             id: 103,
             menuType: 2,
             title: "menus.pureUtilsLink"
           },
           {
-            parentId: 100,
+            parent_id: 100,
             id: 104,
             menuType: 1,
             title: "menus.pureEmbeddedDoc"
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 105,
             menuType: 1,
             title: "menus.pureEpDoc"
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 106,
             menuType: 1,
             title: "menus.pureTailwindcssDoc"
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 107,
             menuType: 1,
             title: "menus.pureVueDoc"
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 108,
             menuType: 1,
             title: "menus.pureViteDoc"
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 109,
             menuType: 1,
             title: "menus.purePiniaDoc"
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 110,
             menuType: 1,
             title: "menus.pureRouterDoc"
           },
           // 权限管理
           {
-            parentId: 0,
+            parent_id: 0,
             id: 200,
             menuType: 0,
             title: "menus.purePermission"
           },
           {
-            parentId: 200,
+            parent_id: 200,
             id: 201,
             menuType: 0,
             title: "menus.purePermissionPage"
           },
           {
-            parentId: 200,
+            parent_id: 200,
             id: 202,
             menuType: 0,
             title: "menus.purePermissionButton"
           },
           {
-            parentId: 202,
+            parent_id: 202,
             id: 203,
             menuType: 3,
             title: "添加"
           },
           {
-            parentId: 202,
+            parent_id: 202,
             id: 204,
             menuType: 3,
             title: "修改"
           },
           {
-            parentId: 202,
+            parent_id: 202,
             id: 205,
             menuType: 3,
             title: "删除"
           },
           // 系统管理
           {
-            parentId: 0,
+            parent_id: 0,
             id: 300,
             menuType: 0,
             title: "menus.pureSysManagement"
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 301,
             menuType: 0,
             title: "menus.pureUser"
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 302,
             menuType: 0,
             title: "menus.pureRole"
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 303,
             menuType: 0,
             title: "menus.pureSystemMenu"
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 304,
             menuType: 0,
             title: "menus.pureDept"
           },
           // 系统监控
           {
-            parentId: 0,
+            parent_id: 0,
             id: 400,
             menuType: 0,
             title: "menus.pureSysMonitor"
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 401,
             menuType: 0,
             title: "menus.pureOnlineUser"
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 402,
             menuType: 0,
             title: "menus.pureLoginLog"
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 403,
             menuType: 0,
             title: "menus.pureOperationLog"
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 404,
             menuType: 0,
             title: "menus.pureSystemLog"
           },
           // 标签页操作
           {
-            parentId: 0,
+            parent_id: 0,
             id: 500,
             menuType: 0,
             title: "menus.pureTabs"
           },
           {
-            parentId: 500,
+            parent_id: 500,
             id: 501,
             menuType: 0,
             title: "menus.pureTabs"
           },
           {
-            parentId: 500,
+            parent_id: 500,
             id: 502,
             menuType: 0,
             title: "query传参模式"
           },
           {
-            parentId: 500,
+            parent_id: 500,
             id: 503,
             menuType: 0,
             title: "params传参模式"
@@ -352,10 +356,12 @@ export default defineFakeRoute([
   },
   // 角色管理-权限-菜单权限-根据角色 id 查对应菜单
   {
-    url: "/v1/role-menu-ids",
+    url: "/v1/role-menu/ids",
     method: "get",
-    response: ({ body }) => {
-      if (body.id == 1) {
+    response: req => {
+      const { query } = req;
+      console.log("req.params", req);
+      if (query.id == 1) {
         return {
           code: 20000,
           message: "操作成功",
@@ -365,7 +371,7 @@ export default defineFakeRoute([
             404, 500, 501, 502, 503
           ]
         };
-      } else if (body.id == 2) {
+      } else if (query.id == 2) {
         return {
           code: 20000,
           message: "操作成功",
@@ -388,7 +394,7 @@ export default defineFakeRoute([
         data: [
           // 外部页面
           {
-            parentId: 0,
+            parent_id: 0,
             id: 100,
             menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
             title: "menus.pureExternalPage",
@@ -412,7 +418,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 100,
+            parent_id: 100,
             id: 101,
             menuType: 0,
             title: "menus.pureExternalDoc",
@@ -436,7 +442,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 101,
+            parent_id: 101,
             id: 102,
             menuType: 2,
             title: "menus.pureExternalLink",
@@ -460,7 +466,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 101,
+            parent_id: 101,
             id: 103,
             menuType: 2,
             title: "menus.pureUtilsLink",
@@ -484,7 +490,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 100,
+            parent_id: 100,
             id: 104,
             menuType: 1,
             title: "menus.pureEmbeddedDoc",
@@ -508,7 +514,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 105,
             menuType: 1,
             title: "menus.pureEpDoc",
@@ -532,7 +538,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 106,
             menuType: 1,
             title: "menus.pureTailwindcssDoc",
@@ -556,7 +562,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 107,
             menuType: 1,
             title: "menus.pureVueDoc",
@@ -580,7 +586,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 108,
             menuType: 1,
             title: "menus.pureViteDoc",
@@ -604,7 +610,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 109,
             menuType: 1,
             title: "menus.purePiniaDoc",
@@ -628,7 +634,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 104,
+            parent_id: 104,
             id: 110,
             menuType: 1,
             title: "menus.pureRouterDoc",
@@ -653,7 +659,7 @@ export default defineFakeRoute([
           },
           // 权限管理
           {
-            parentId: 0,
+            parent_id: 0,
             id: 200,
             menuType: 0,
             title: "menus.purePermission",
@@ -677,7 +683,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 200,
+            parent_id: 200,
             id: 201,
             menuType: 0,
             title: "menus.purePermissionPage",
@@ -701,7 +707,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 200,
+            parent_id: 200,
             id: 202,
             menuType: 0,
             title: "menus.purePermissionButton",
@@ -725,7 +731,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 202,
+            parent_id: 202,
             id: 203,
             menuType: 0,
             title: "menus.purePermissionButtonRouter",
@@ -749,7 +755,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 203,
+            parent_id: 203,
             id: 210,
             menuType: 3,
             title: "添加",
@@ -773,7 +779,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 203,
+            parent_id: 203,
             id: 211,
             menuType: 3,
             title: "修改",
@@ -797,7 +803,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 203,
+            parent_id: 203,
             id: 212,
             menuType: 3,
             title: "删除",
@@ -821,7 +827,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 202,
+            parent_id: 202,
             id: 204,
             menuType: 0,
             title: "menus.purePermissionButtonLogin",
@@ -845,7 +851,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 204,
+            parent_id: 204,
             id: 220,
             menuType: 3,
             title: "添加",
@@ -869,7 +875,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 204,
+            parent_id: 204,
             id: 221,
             menuType: 3,
             title: "修改",
@@ -893,7 +899,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 204,
+            parent_id: 204,
             id: 222,
             menuType: 3,
             title: "删除",
@@ -918,7 +924,7 @@ export default defineFakeRoute([
           },
           // 系统管理
           {
-            parentId: 0,
+            parent_id: 0,
             id: 300,
             menuType: 0,
             title: "menus.pureSysManagement",
@@ -942,7 +948,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 301,
             menuType: 0,
             title: "menus.pureUser",
@@ -966,7 +972,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 302,
             menuType: 0,
             title: "menus.pureRole",
@@ -990,7 +996,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 303,
             menuType: 0,
             title: "menus.pureSystemMenu",
@@ -1014,7 +1020,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 300,
+            parent_id: 300,
             id: 304,
             menuType: 0,
             title: "menus.pureDept",
@@ -1039,7 +1045,7 @@ export default defineFakeRoute([
           },
           // 系统监控
           {
-            parentId: 0,
+            parent_id: 0,
             id: 400,
             menuType: 0,
             title: "menus.pureSysMonitor",
@@ -1063,7 +1069,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 401,
             menuType: 0,
             title: "menus.pureOnlineUser",
@@ -1087,7 +1093,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 402,
             menuType: 0,
             title: "menus.pureLoginLog",
@@ -1111,7 +1117,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 403,
             menuType: 0,
             title: "menus.pureOperationLog",
@@ -1135,7 +1141,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 400,
+            parent_id: 400,
             id: 404,
             menuType: 0,
             title: "menus.pureSystemLog",
@@ -1160,7 +1166,7 @@ export default defineFakeRoute([
           },
           // 标签页操作
           {
-            parentId: 0,
+            parent_id: 0,
             id: 500,
             menuType: 0,
             title: "menus.pureTabs",
@@ -1184,7 +1190,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 500,
+            parent_id: 500,
             id: 501,
             menuType: 0,
             title: "menus.pureTabs",
@@ -1208,7 +1214,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 500,
+            parent_id: 500,
             id: 502,
             menuType: 0,
             title: "query传参模式",
@@ -1232,7 +1238,7 @@ export default defineFakeRoute([
             showParent: false
           },
           {
-            parentId: 500,
+            parent_id: 500,
             id: 503,
             menuType: 0,
             title: "params传参模式",
@@ -1270,7 +1276,7 @@ export default defineFakeRoute([
         data: [
           {
             name: "杭州总公司",
-            parentId: 0,
+            parent_id: 0,
             id: 100,
             sort: 0,
             phone: "15888888888",
@@ -1283,7 +1289,7 @@ export default defineFakeRoute([
           },
           {
             name: "郑州分公司",
-            parentId: 100,
+            parent_id: 100,
             id: 101,
             sort: 1,
             phone: "15888888888",
@@ -1296,7 +1302,7 @@ export default defineFakeRoute([
           },
           {
             name: "研发部门",
-            parentId: 101,
+            parent_id: 101,
             id: 103,
             sort: 1,
             phone: "15888888888",
@@ -1309,7 +1315,7 @@ export default defineFakeRoute([
           },
           {
             name: "市场部门",
-            parentId: 102,
+            parent_id: 102,
             id: 108,
             sort: 1,
             phone: "15888888888",
@@ -1322,7 +1328,7 @@ export default defineFakeRoute([
           },
           {
             name: "深圳分公司",
-            parentId: 100,
+            parent_id: 100,
             id: 102,
             sort: 2,
             phone: "15888888888",
@@ -1335,7 +1341,7 @@ export default defineFakeRoute([
           },
           {
             name: "市场部门",
-            parentId: 101,
+            parent_id: 101,
             id: 104,
             sort: 2,
             phone: "15888888888",
@@ -1348,7 +1354,7 @@ export default defineFakeRoute([
           },
           {
             name: "财务部门",
-            parentId: 102,
+            parent_id: 102,
             id: 109,
             sort: 2,
             phone: "15888888888",
@@ -1361,7 +1367,7 @@ export default defineFakeRoute([
           },
           {
             name: "测试部门",
-            parentId: 101,
+            parent_id: 101,
             id: 105,
             sort: 3,
             phone: "15888888888",
@@ -1374,7 +1380,7 @@ export default defineFakeRoute([
           },
           {
             name: "财务部门",
-            parentId: 101,
+            parent_id: 101,
             id: 106,
             sort: 4,
             phone: "15888888888",
@@ -1387,7 +1393,7 @@ export default defineFakeRoute([
           },
           {
             name: "运维部门",
-            parentId: 101,
+            parent_id: 101,
             id: 107,
             sort: 5,
             phone: "15888888888",
@@ -1620,7 +1626,7 @@ export default defineFakeRoute([
             message: "操作成功",
             data: [
               {
-                parentId: 0,
+                parent_id: 0,
                 id: 400,
                 menuType: 0,
                 title: "menus.pureSysMonitor",
@@ -1644,7 +1650,7 @@ export default defineFakeRoute([
                 showParent: false
               },
               {
-                parentId: 400,
+                parent_id: 400,
                 id: 401,
                 menuType: 0,
                 title: "menus.pureOnlineUser",
@@ -1668,7 +1674,7 @@ export default defineFakeRoute([
                 showParent: false
               },
               {
-                parentId: 400,
+                parent_id: 400,
                 id: 402,
                 menuType: 0,
                 title: "menus.pureLoginLog",
@@ -1692,7 +1698,7 @@ export default defineFakeRoute([
                 showParent: false
               },
               {
-                parentId: 400,
+                parent_id: 400,
                 id: 403,
                 menuType: 0,
                 title: "menus.pureOperationLog",
@@ -1716,7 +1722,7 @@ export default defineFakeRoute([
                 showParent: false
               },
               {
-                parentId: 400,
+                parent_id: 400,
                 id: 404,
                 menuType: 0,
                 title: "menus.pureSystemLog",

@@ -363,7 +363,7 @@
 | 5 | `/v1/sysUserRole/delete/:userId/:roleId` | DELETE | 删除用户角色关联 | ❌ 缺少 |
 | 6 | `/v1/sysUserRole/deleteByUserId/:userId` | DELETE | 根据用户ID删除所有关联 | ❌ 缺少 |
 
-**备注**：mock中 `/list-role-ids` 接口路径与文档不符。
+**备注**：mock中 `/user-role/ids` 接口路径与文档不符。
 
 ---
 
@@ -377,8 +377,8 @@
 | `/refresh-token` | POST | 无 | - | 文档中无此接口 |
 | `/get-async-routes` | GET | 无 | - | 文档中无此接口 |
 | `/user` | POST | `/v1/user/list` | GET | 路径和方法都不符 |
-| `/list-all-role` | GET | 无 | - | 文档中无此接口 |
-| `/list-role-ids` | POST | `/v1/sysUserRole/*` | - | 路径不符 |
+| `/role/all-list` | GET | 无 | - | 文档中无此接口 |
+| `/user-role/ids` | POST | `/v1/sysUserRole/*` | - | 路径不符 |
 | `/role` | POST | `/v1/roleInfo/list` | GET | 路径和方法都不符 |
 | `/role-menu` | POST | `/v1/sysRoleMenu/*` | - | 路径不符 |
 | `/role-menu-ids` | POST | `/v1/sysRoleMenu/*` | - | 路径不符 |

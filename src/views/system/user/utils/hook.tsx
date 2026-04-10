@@ -41,6 +41,7 @@ import {
   reactive,
   onMounted
 } from "vue";
+import { userRoleApi } from "@/api/userRole";
 
 /** 加密密码 */
 async function encryptPassword(password) {
@@ -366,17 +367,28 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             if (title === "新增") {
               // 对密码进行加密
               curData.password = await encryptPassword(curData.password);
-              userApi.create(curData);
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
+              const res = await userApi.create(curData);
+              if (res.code === 20000) {
+                // 实际开发先调用新增接口，再进行下面操作
+                chores();
+              } else {
+                message(res.message, {
+                  type: "error"
+                });
+              }
             } else {
+              debugger;
               // 如果修改时也需要密码加密
               if (curData.password) {
                 curData.password = await encryptPassword(curData.password);
               }
-              userApi.update(curData._id, curData);
-              // 实际开发先调用修改接口，再进行下面操作
-              chores();
+              const res = await userApi.update(curData._id as string, curData);
+              if (res.code === 20000) {
+                // 实际开发先调用修改接口，再进行下面操作
+                chores();
+              } else {
+                message(res.message, { type: "error" });
+              }
             }
           }
         });
@@ -477,13 +489,22 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             // 表单规则校验通过
             // 对新密码进行加密
             const encryptedPassword = await encryptPassword(pwdForm.newPwd);
-            message(`已成功重置 ${row.username} 用户的密码`, {
-              type: "success"
+            const res = await userApi.update(row._id as string, {
+              password: encryptedPassword
             });
-            console.log(encryptedPassword);
-            // 根据实际业务使用encryptedPassword和row里的某些字段去调用重置用户密码接口即可
-            done(); // 关闭弹框
-            onSearch(); // 刷新表格数据
+            if (res.code === 20000) {
+              message(`已成功重置 ${row.username} 用户的密码`, {
+                type: "success"
+              });
+              console.log(encryptedPassword);
+              // 根据实际业务使用encryptedPassword和row里的某些字段去调用重置用户密码接口即可
+              done(); // 关闭弹框
+              onSearch(); // 刷新表格数据
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
           }
         });
       }
@@ -493,7 +514,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   /** 分配角色 */
   async function handleRole(row) {
     // 选中的角色列表
-    const ids = (await getRoleIds({ userId: row.id })).data ?? [];
+    const ids = (await getRoleIds({ userId: row._id })).data ?? [];
     addDialog({
       title: `分配 ${row.username} 用户的角色`,
       props: {
@@ -513,6 +534,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       beforeSure: (done, { options }) => {
         const curData = options.props.formInline as RoleFormItemProps;
         console.log("curIds", curData.ids);
+        userRoleApi.batchCreate({ user_id: row._id, role_ids: curData.ids });
         // 根据实际业务使用curData.ids和row里的某些字段去调用修改角色接口即可
         done(); // 关闭弹框
       }
