@@ -85,6 +85,10 @@ menus:
   pureSystemLog: 系统日志
   pureCodeMirror: 代码编辑器
   pureMarkdown: Markdown
+  pureStudent: 学生管理
+  group: 分组管理
+  course: 课程管理
+  studentInfo: 学生信息管理
   pureEditor: 编辑器
   pureAbnormal: 异常页面
   purePageNotFound: "404"
