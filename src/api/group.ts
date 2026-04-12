@@ -22,6 +22,11 @@ export const getGroupList = (params?: object) => {
   return http.request<ResultTable>("get", "/group", { params });
 };
 
+/** 获取全部分组列表 */
+export const getAllGroupList = (params?: object) => {
+  return http.request<ResultTable>("get", "/group/all-list", { params });
+};
+
 /** 添加分组 */
 export const addGroup = (data?: object) => {
   return http.request<Result>("post", "/group/create", { data });
@@ -41,6 +46,8 @@ export const updateGroup = (id: string, data?: object) => {
 export const groupApi = {
   /** 获取分组列表 */
   getList: (params?: object) => getGroupList(params),
+  /** 获取全部分组列表 */
+  getAllList: (params?: object) => getAllGroupList(params),
   /** 添加分组 */
   create: (data?: object) => addGroup(data),
   /** 删除分组 */

@@ -1,33 +1,59 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import ReCol from "@/components/ReCol";
 import { formRules } from "../utils/rule";
 import { FormItemProps } from "../utils/types";
+import { groupApi } from "@/api/group";
 
-const props = withDefaults(defineProps<{
-  formInline?: FormItemProps
-}>(), {
-  formInline: () => ({
-    id: "",
-    name: "",
-    gender: "",
-    avatar: "",
-    birthday: "",
-    age: 0,
-    tags: "",
-    grades: "",
-    phone: "",
-    remarks: "",
-    wechart: "",
-    address: "",
-    email: "",
-    status: 1,
-    groupId: ""
-  })
-});
+const props = withDefaults(
+  defineProps<{
+    formInline?: FormItemProps;
+  }>(),
+  {
+    formInline: () => ({
+      id: "",
+      name: "",
+      gender: "",
+      avatar: "",
+      birthday: "",
+      age: 0,
+      tags: "",
+      grades: "",
+      phone: "",
+      remarks: "",
+      wechart: "",
+      address: "",
+      email: "",
+      status: 1,
+      groupId: ""
+    })
+  }
+);
 
 const ruleFormRef = ref();
 const newFormInline = ref(props.formInline);
+const groupList = ref([]);
+const loading = ref(false);
+
+// 获取分组列表
+async function getGroupList() {
+  loading.value = true;
+  try {
+    const res = await groupApi.getAllList();
+    if (res.code === 20000) {
+      groupList.value = res.data || [];
+    }
+  } catch (error) {
+    console.error("获取分组列表失败:", error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+// 组件挂载时获取分组列表
+onMounted(() => {
+  getGroupList();
+});
 
 function getRef() {
   return ruleFormRef.value;
@@ -143,11 +169,19 @@ defineExpose({ getRef });
 
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="分组" prop="groupId">
-          <el-input
+          <el-select
             v-model="newFormInline.groupId"
             clearable
-            placeholder="请输入分组标识"
-          />
+            placeholder="请选择分组"
+            :loading="loading"
+          >
+            <el-option
+              v-for="group in groupList"
+              :key="group._id"
+              :label="group.name"
+              :value="group._id"
+            />
+          </el-select>
         </el-form-item>
       </re-col>
 
@@ -155,8 +189,8 @@ defineExpose({ getRef });
         <el-form-item label="状态" prop="status">
           <el-switch
             v-model="newFormInline.status"
-            active-value="1"
-            inactive-value="0"
+            :active-value="1"
+            :inactive-value="0"
             active-text="启用"
             inactive-text="禁用"
             inline-prompt

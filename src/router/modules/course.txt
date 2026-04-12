@@ -9,7 +9,7 @@ export default {
   redirect: "/course/index",
   meta: {
     icon: "ep:reading",
-    title: $t("menus.course"),
+    title: $t("menus.pureCourse"),
     rank: course
   },
   children: [
@@ -18,7 +18,7 @@ export default {
       name: "CourseIndex",
       component: () => import("@/views/course/index.vue"),
       meta: {
-        title: $t("menus.course"),
+        title: $t("menus.pureCourse"),
         showLink: true
       }
     }

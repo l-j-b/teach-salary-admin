@@ -8,6 +8,7 @@ import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
 import AddFill from "~icons/ri/add-circle-line";
+import Book from "~icons/fa-solid/book";
 
 defineOptions({
   name: "CourseManagement"
@@ -97,9 +98,7 @@ const {
           </div>
           <el-popconfirm title="是否确认删除?" @confirm="onbatchDel">
             <template #reference>
-              <el-button type="danger" text class="mr-1!">
-                批量删除
-              </el-button>
+              <el-button type="danger" text class="mr-1!"> 批量删除 </el-button>
             </template>
           </el-popconfirm>
         </div>
@@ -129,13 +128,22 @@ const {
               link
               type="primary"
               :size="size"
+              :icon="useRenderIcon(Book)"
+            >
+              排课
+            </el-button>
+            <el-button
+              class="reset-margin"
+              link
+              type="primary"
+              :size="size"
               :icon="useRenderIcon(EditPen)"
               @click="openDialog('修改', row)"
             >
               修改
             </el-button>
             <el-popconfirm
-              :title="`是否确认删除课程ID为${row.id}的这条数据`"
+              :title="`是否确认删除课程ID为${row._id}的这条数据`"
               @confirm="handleDelete(row)"
             >
               <template #reference>

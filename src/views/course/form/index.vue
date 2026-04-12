@@ -4,19 +4,22 @@ import ReCol from "@/components/ReCol";
 import { formRules } from "../utils/rule";
 import { FormItemProps } from "../utils/types";
 
-const props = withDefaults(defineProps<{
-  formInline?: FormItemProps
-}>(), {
-  formInline: () => ({
-    id: "",
-    name: "",
-    content: "",
-    studentId: [],
-    remark: "",
-    status: "1",
-    dataStatus: "1"
-  })
-});
+const props = withDefaults(
+  defineProps<{
+    formInline?: FormItemProps;
+  }>(),
+  {
+    formInline: () => ({
+      id: "",
+      name: "",
+      content: "",
+      studentId: [],
+      remark: "",
+      status: "1",
+      dataStatus: "1"
+    })
+  }
+);
 
 const ruleFormRef = ref();
 const newFormInline = ref(props.formInline);
@@ -65,32 +68,28 @@ defineExpose({ getRef });
             clearable
             placeholder="请输入学生ID，多个ID用逗号分隔"
           />
-          <div class="text-xs text-gray-400 mt-1">多个学生ID请用逗号分隔，例如：1,2,3</div>
+          <div class="text-xs text-gray-400 mt-1">
+            多个学生ID请用逗号分隔，例如：1,2,3
+          </div>
         </el-form-item>
       </re-col>
 
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="课程状态" prop="status">
-          <el-select
-            v-model="newFormInline.status"
-            placeholder="请选择课程状态"
-          >
-            <el-option label="待开始" value="1" />
-            <el-option label="进行中" value="2" />
-            <el-option label="已完成" value="3" />
-          </el-select>
+          <el-radio-group v-model="newFormInline.status">
+            <el-radio :label="1">待开始</el-radio>
+            <el-radio :label="2">进行中</el-radio>
+            <el-radio :label="3">已完成</el-radio>
+          </el-radio-group>
         </el-form-item>
       </re-col>
 
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="数据状态" prop="dataStatus">
-          <el-select
-            v-model="newFormInline.dataStatus"
-            placeholder="请选择数据状态"
-          >
-            <el-option label="启用" value="1" />
-            <el-option label="禁用" value="0" />
-          </el-select>
+          <el-radio-group v-model="newFormInline.dataStatus">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+          </el-radio-group>
         </el-form-item>
       </re-col>
 

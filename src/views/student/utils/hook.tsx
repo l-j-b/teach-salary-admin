@@ -6,23 +6,9 @@ import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
 import { studentApi } from "@/api/student";
 import type { FormItemProps } from "../utils/types";
-import {
-  getKeyList,
-  isAllEmpty,
-  deviceDetection
-} from "@pureadmin/utils";
-import {
-  ElMessageBox
-} from "element-plus";
-import {
-  type Ref,
-  h,
-  ref,
-  toRaw,
-  computed,
-  reactive,
-  onMounted
-} from "vue";
+import { getKeyList, isAllEmpty, deviceDetection } from "@pureadmin/utils";
+import { ElMessageBox } from "element-plus";
+import { type Ref, h, ref, toRaw, computed, reactive, onMounted } from "vue";
 
 export function useStudent(tableRef: Ref) {
   const form = reactive({
@@ -141,7 +127,7 @@ export function useStudent(tableRef: Ref) {
   });
 
   function onChange({ row, index }) {
-    debugger
+    debugger;
     ElMessageBox.confirm(
       `确认要<strong>${
         row.status === 2 ? "禁用" : "启用"
@@ -165,7 +151,7 @@ export function useStudent(tableRef: Ref) {
             loading: true
           }
         );
-        await studentApi.update(row._id, { status: row.status });
+        await studentApi.update(row.id, { status: row.status });
         setTimeout(() => {
           switchLoadMap.value[index] = Object.assign(
             {},
@@ -252,7 +238,7 @@ export function useStudent(tableRef: Ref) {
       title: `${title}学生`,
       props: {
         formInline: {
-          id: row?._id ?? "",
+          _id: row?._id ?? "",
           name: row?.name ?? "",
           gender: row?.gender ?? "",
           avatar: row?.avatar ?? "",
@@ -300,7 +286,10 @@ export function useStudent(tableRef: Ref) {
                 });
               }
             } else {
-              const res = await studentApi.update(curData._id as string, curData);
+              const res = await studentApi.update(
+                curData._id as string,
+                curData
+              );
               if (res.code === 20000) {
                 // 实际开发先调用修改接口，再进行下面操作
                 chores();

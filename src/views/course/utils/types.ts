@@ -1,6 +1,6 @@
 /** 课程表单类型 */
 export interface FormItemProps {
-  id?: string;
+  _id?: string;
   name: string;
   content?: string;
   studentId?: string[];
@@ -11,7 +11,7 @@ export interface FormItemProps {
 
 /** 课程列表项类型 */
 export interface CourseItem {
-  id: string;
+  _id: string;
   name: string;
   content: string;
   studentId: string[];

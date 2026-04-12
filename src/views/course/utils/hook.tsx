@@ -31,7 +31,7 @@ export function useCourse(tableRef: Ref) {
     },
     {
       label: "课程ID",
-      prop: "id",
+      prop: "_id",
       width: 90
     },
     {
@@ -123,9 +123,9 @@ export function useCourse(tableRef: Ref) {
   }
 
   async function handleDelete(row) {
-    const res = await courseApi.delete(row.id);
+    const res = await courseApi.delete(row._id);
     console.log(res);
-    message(`您删除了课程ID为${row.id}的这条数据`, { type: "success" });
+    message(`您删除了课程名称为${row.name}的这条数据`, { type: "success" });
     onSearch();
   }
 
@@ -156,7 +156,7 @@ export function useCourse(tableRef: Ref) {
     // 返回当前选中的行
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
     // 接下来根据实际业务，通过选中行的某项数据，比如下面的id，调用接口进行批量删除
-    message(`已删除课程ID为 ${getKeyList(curSelected, "id")} 的数据`, {
+    message(`已删除课程名称为 ${getKeyList(curSelected, "name")} 的数据`, {
       type: "success"
     });
     tableRef.value.getTableRef().clearSelection();
@@ -185,28 +185,30 @@ export function useCourse(tableRef: Ref) {
   };
 
   function openDialog(title = "新增", row?: FormItemProps) {
+    const formData = {
+      _id: row?._id ?? "",
+      name: row?.name ?? "",
+      content: row?.content ?? "",
+      studentId: row?.studentId ?? [],
+      remark: row?.remark ?? "",
+      status: row?.status ?? 1,
+      dataStatus: row?.dataStatus ?? 1
+    };
     addDialog({
       title: `${title}课程`,
       props: {
-        formInline: {
-          id: row?.id ?? "",
-          name: row?.name ?? "",
-          content: row?.content ?? "",
-          studentId: row?.studentId ?? [],
-          remark: row?.remark ?? "",
-          status: row?.status ?? "1",
-          dataStatus: row?.dataStatus ?? "1"
-        }
+        formInline: formData
       },
       width: "46%",
       draggable: true,
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
-      contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
+      contentRenderer: () =>
+        h(editForm, { ref: formRef, formInline: formData }),
       beforeSure: async (done, { options }) => {
         const FormRef = formRef.value.getRef();
-        const curData = options.props.formInline as FormItemProps;
+        const curData = formRef.value.newFormInline;
 
         // 处理学生ID数组，将逗号分隔的字符串转换为数组
         if (typeof curData.studentId === "string") {
