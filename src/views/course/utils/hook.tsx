@@ -104,7 +104,7 @@ export function useCourse(tableRef: Ref) {
     {
       label: "操作",
       fixed: "right",
-      width: 180,
+      width: 240,
       slot: "operation"
     }
   ];

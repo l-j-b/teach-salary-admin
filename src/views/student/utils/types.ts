@@ -2,7 +2,7 @@
 export interface FormItemProps {
   _id?: string;
   name: string;
-  gender?: string;
+  gender?: number;
   avatar?: string;
   birthday?: string;
   age?: number;
@@ -21,7 +21,7 @@ export interface FormItemProps {
 export interface StudentItem {
   _id: string;
   name: string;
-  gender: string;
+  gender: number;
   avatar: string;
   birthday: string;
   age: number;

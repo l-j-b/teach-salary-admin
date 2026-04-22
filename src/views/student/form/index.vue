@@ -13,7 +13,7 @@ const props = withDefaults(
     formInline: () => ({
       id: "",
       name: "",
-      gender: "",
+      gender: 0,
       avatar: "",
       birthday: "",
       age: 0,
@@ -82,15 +82,11 @@ defineExpose({ getRef });
 
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="性别" prop="gender">
-          <el-select
-            v-model="newFormInline.gender"
-            placeholder="请选择性别"
-            clearable
-          >
-            <el-option label="男" value="1" />
-            <el-option label="女" value="2" />
-            <el-option label="未知" value="0" />
-          </el-select>
+          <el-radio-group v-model="newFormInline.gender">
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="2">女</el-radio>
+            <el-radio :label="0">未知</el-radio>
+          </el-radio-group>
         </el-form-item>
       </re-col>
 

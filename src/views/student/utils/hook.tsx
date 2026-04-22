@@ -240,7 +240,7 @@ export function useStudent(tableRef: Ref) {
         formInline: {
           _id: row?._id ?? "",
           name: row?.name ?? "",
-          gender: row?.gender ?? "",
+          gender: row?.gender ?? 0,
           avatar: row?.avatar ?? "",
           birthday: row?.birthday ?? "",
           age: row?.age ?? 0,
