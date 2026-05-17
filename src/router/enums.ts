@@ -30,7 +30,10 @@ const home = 0, // 平台规定只有 home 路由的 rank 才能为 0 ，所以�
   menuoverflow = 27,
   student = 28,
   group = 29,
-  course = 30;
+  course = 30,
+  schedule = 31,
+  section = 32,
+  checkout = 33;
 
 export {
   home,
@@ -63,5 +66,8 @@ export {
   menuoverflow,
   student,
   group,
-  course
+  course,
+  schedule,
+  section,
+  checkout
 };

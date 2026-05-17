@@ -74,6 +74,7 @@ export function setToken(data: DataInfo<Date>) {
     useUserStoreHook().SET_NICKNAME(nickname);
     useUserStoreHook().SET_ROLES(roles);
     useUserStoreHook().SET_PERMS(permissions);
+    console.log("[setToken] 存储用户信息:", { avatar, username, nickname, roles, permissions });
     storageLocal().setItem(userKey, {
       refreshToken,
       expires,
@@ -83,9 +84,11 @@ export function setToken(data: DataInfo<Date>) {
       roles,
       permissions
     });
+    console.log("[setToken] localStorage存储后读取:", storageLocal().getItem(userKey));
   }
 
   if (data.username && data.roles) {
+    console.log("[setToken] 使用登录接口返回的数据:", data);
     const { username, roles } = data;
     setUserKey({
       avatar: data?.avatar ?? "",
@@ -95,6 +98,7 @@ export function setToken(data: DataInfo<Date>) {
       permissions: data?.permissions ?? []
     });
   } else {
+    console.log("[setToken] 使用缓存数据:");
     const avatar =
       storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "";
     const username =

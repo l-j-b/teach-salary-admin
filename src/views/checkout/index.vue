@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useStudent } from "./utils/hook";
+import { useCheckout } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
 import Delete from "~icons/ep/delete";
-import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
-import AddFill from "~icons/ri/add-circle-line";
+import Money from "~icons/ep/money";
 
 defineOptions({
-  name: "StudentManagement"
+  name: "CheckoutManagement"
 });
 
 const formRef = ref();
@@ -23,19 +22,16 @@ const {
   dataList,
   selectedNum,
   pagination,
-  buttonClass,
-  deviceDetection,
   onSearch,
   resetForm,
   onbatchDel,
-  openDialog,
-  handleUpdate,
   handleDelete,
   handleSizeChange,
   onSelectionCancel,
   handleCurrentChange,
-  handleSelectionChange
-} = useStudent(tableRef);
+  handleSelectionChange,
+  handleExecute
+} = useCheckout(tableRef);
 </script>
 
 <template>
@@ -46,18 +42,10 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-3 overflow-auto"
     >
-      <el-form-item label="学生姓名：" prop="name">
+      <el-form-item label="结算标题：" prop="title">
         <el-input
-          v-model="form.name"
-          placeholder="请输入学生姓名"
-          clearable
-          class="w-45!"
-        />
-      </el-form-item>
-      <el-form-item label="年级：" prop="grades">
-        <el-input
-          v-model="form.grades"
-          placeholder="请输入年级"
+          v-model="form.title"
+          placeholder="请输入结算标题"
           clearable
           class="w-45!"
         />
@@ -71,20 +59,16 @@ const {
         >
           搜索
         </el-button>
-        <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
+        <el-button :icon="useRenderIcon(Refresh)" @click="resetForm">
           重置
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="学生管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar title="结算管理" :columns="columns" @refresh="onSearch">
       <template #buttons>
-        <el-button
-          type="primary"
-          :icon="useRenderIcon(AddFill)"
-          @click="openDialog()"
-        >
-          新增学生
+        <el-button type="primary" :icon="useRenderIcon(Money)">
+          执行结算
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -135,13 +119,12 @@ const {
               link
               type="primary"
               :size="size"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('修改', row)"
+              @click="handleExecute(row)"
             >
-              修改
+              查看详情
             </el-button>
             <el-popconfirm
-              :title="`是否确认删除学生${row.name}的这条数据`"
+              :title="`是否确认删除结算${row.title}的这条数据`"
               @confirm="handleDelete(row)"
             >
               <template #reference>

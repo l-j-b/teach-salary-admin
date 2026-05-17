@@ -2,15 +2,42 @@ import editForm from "../form/index.vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
-import { studentApi } from "@/api/student";
+import { sectionApi } from "@/api/section";
 import type { FormItemProps } from "../utils/types";
 import { getKeyList, deviceDetection } from "@pureadmin/utils";
 import { type Ref, h, ref, toRaw, computed, reactive, onMounted } from "vue";
 
-export function useStudent(tableRef: Ref) {
+function getStatusLabel(status: number) {
+  switch (status) {
+    case 2:
+      return "待上课";
+    case 3:
+      return "已完成";
+    case 5:
+      return "请假";
+    default:
+      return "未知";
+  }
+}
+
+function getStatusType(status: number) {
+  switch (status) {
+    case 2:
+      return "warning";
+    case 3:
+      return "success";
+    case 5:
+      return "info";
+    default:
+      return "info";
+  }
+}
+
+export function useSection(tableRef: Ref) {
   const form = reactive({
     name: "",
-    grades: ""
+    courseName: "",
+    status: undefined as number | undefined
   });
   const formRef = ref();
   const dataList = ref([]);
@@ -30,43 +57,29 @@ export function useStudent(tableRef: Ref) {
       reserveSelection: true
     },
     {
-      label: "学生ID",
+      label: "课节ID",
       prop: "_id",
       width: 90
     },
     {
-      label: "学生姓名",
+      label: "课节名称",
       prop: "name",
-      minWidth: 100
+      minWidth: 130
     },
     {
-      label: "性别",
-      prop: "gender",
-      minWidth: 70,
-      cellRenderer: ({ row }) => {
-        return (
-          <el-tag size={props.size} effect="plain">
-            {row.gender === "male" ? "男" : row.gender === "female" ? "女" : "-"}
-          </el-tag>
-        );
-      }
+      label: "课程名称",
+      prop: "courseName",
+      minWidth: 130
     },
     {
-      label: "年级",
-      prop: "grades",
-      minWidth: 90
+      label: "开始时间",
+      prop: "beginDateTime",
+      minWidth: 160
     },
     {
-      label: "辅导科目",
-      prop: "subjects",
-      minWidth: 120,
-      cellRenderer: ({ row }) => {
-        const subjects = row.subjects || [];
-        if (Array.isArray(subjects) && subjects.length > 0) {
-          return subjects.join(", ");
-        }
-        return "-";
-      }
+      label: "结束时间",
+      prop: "endDateTime",
+      minWidth: 160
     },
     {
       label: "课时费",
@@ -77,19 +90,41 @@ export function useStudent(tableRef: Ref) {
       }
     },
     {
-      label: "家长姓名",
-      prop: "parentsName",
-      minWidth: 100
+      label: "总课时",
+      prop: "totalHours",
+      minWidth: 90,
+      cellRenderer: ({ row }) => {
+        return `${row.totalHours || 0}小时`;
+      }
     },
     {
-      label: "手机号",
-      prop: "phone",
-      minWidth: 120
+      label: "总收入",
+      prop: "totalFee",
+      minWidth: 100,
+      cellRenderer: ({ row }) => {
+        return `¥${row.totalFee || 0}`;
+      }
+    },
+    {
+      label: "状态",
+      prop: "status",
+      minWidth: 90,
+      cellRenderer: ({ row, props }) => {
+        return (
+          <el-tag
+            size={props.size}
+            type={getStatusType(row.status)}
+            effect="plain"
+          >
+            {getStatusLabel(row.status)}
+          </el-tag>
+        );
+      }
     },
     {
       label: "操作",
       fixed: "right",
-      width: 180,
+      width: 240,
       slot: "operation"
     }
   ];
@@ -108,9 +143,9 @@ export function useStudent(tableRef: Ref) {
   }
 
   async function handleDelete(row) {
-    const res = await studentApi.delete(row._id);
+    const res = await sectionApi.delete(row._id);
     console.log(res);
-    message(`您删除了学生${row.name}的这条数据`, { type: "success" });
+    message(`您删除了课节${row.name}的这条数据`, { type: "success" });
     onSearch();
   }
 
@@ -134,16 +169,19 @@ export function useStudent(tableRef: Ref) {
 
   function onbatchDel() {
     const curSelected = tableRef.value.getTableRef().getSelectionRows();
-    message(`已删除学生 ${getKeyList(curSelected, "name")} 的数据`, {
-      type: "success"
+    const ids = getKeyList(curSelected, "_id");
+    sectionApi.batchDelete(ids).then(() => {
+      message(`已删除课节 ${getKeyList(curSelected, "name")} 的数据`, {
+        type: "success"
+      });
+      tableRef.value.getTableRef().clearSelection();
+      onSearch();
     });
-    tableRef.value.getTableRef().clearSelection();
-    onSearch();
   }
 
   async function onSearch() {
     loading.value = true;
-    const { code, data } = await studentApi.getList(toRaw(form));
+    const { code, data } = await sectionApi.getList(toRaw(form));
     if (code === 20000) {
       dataList.value = data?.list || [];
       pagination.total = data?.total || 0;
@@ -166,23 +204,21 @@ export function useStudent(tableRef: Ref) {
     const formData = {
       _id: row?._id ?? "",
       name: row?.name ?? "",
-      avatar: row?.avatar ?? "",
-      grades: row?.grades ?? "",
-      subjects: row?.subjects ?? [],
+      courseId: row?.courseId ?? "",
+      courseName: row?.courseName ?? "",
+      studentId: row?.studentId ?? [],
+      studentName: row?.studentName ?? "",
+      beginDateTime: row?.beginDateTime ?? "",
+      endDateTime: row?.endDateTime ?? "",
       hourlyfee: row?.hourlyfee ?? 0,
-      parentsName: row?.parentsName ?? "",
-      gender: row?.gender ?? "male",
-      birthday: row?.birthday ?? "",
-      age: row?.age ?? undefined,
-      phone: row?.phone ?? "",
-      tags: row?.tags ?? [],
-      remarks: row?.remarks ?? "",
-      email: row?.email ?? "",
-      wechart: row?.wechart ?? "",
-      address: row?.address ?? ""
+      totalHours: row?.totalHours ?? 0,
+      totalFee: row?.totalFee ?? 0,
+      status: row?.status ?? 2,
+      remark: row?.remark ?? "",
+      notes: row?.notes ?? ""
     };
     addDialog({
-      title: `${title}学生`,
+      title: `${title}课节`,
       props: {
         formInline: formData
       },
@@ -191,13 +227,14 @@ export function useStudent(tableRef: Ref) {
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
-      contentRenderer: () => h(editForm, { ref: formRef, formInline: formData }),
+      contentRenderer: () =>
+        h(editForm, { ref: formRef, formInline: formData }),
       beforeSure: async (done, { options }) => {
         const FormRef = formRef.value.getRef();
         const curData = formRef.value.newFormInline;
 
         function chores() {
-          message(`您${title}了学生${curData.name}的这条数据`, {
+          message(`您${title}了课节${curData.name}的这条数据`, {
             type: "success"
           });
           done();
@@ -207,14 +244,17 @@ export function useStudent(tableRef: Ref) {
           if (valid) {
             console.log("curData", curData);
             if (title === "新增") {
-              const res = await studentApi.create(curData);
+              const res = await sectionApi.create(curData);
               if (res.code === 20000) {
                 chores();
               } else {
                 message(res.message, { type: "error" });
               }
             } else {
-              const res = await studentApi.update(curData._id as string, curData);
+              const res = await sectionApi.update(
+                curData._id as string,
+                curData
+              );
               if (res.code === 20000) {
                 chores();
               } else {

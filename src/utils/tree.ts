@@ -60,6 +60,8 @@ export const buildHierarchyTree = (tree: any[], pathList = []): any => {
   }
   if (!tree || tree.length === 0) return [];
   for (const [key, node] of tree.entries()) {
+    // 跳过无效节点
+    if (!node || typeof node !== "object") continue;
     node.id = key;
     node.parent_id = pathList.length ? pathList[pathList.length - 1] : null;
     node.pathList = [...pathList, node.id];

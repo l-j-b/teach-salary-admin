@@ -1,6 +1,18 @@
 // 模拟后端动态生成路由
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
-import { system, monitor, permission, frame, tabs } from "@/router/enums";
+import {
+  system,
+  monitor,
+  permission,
+  frame,
+  tabs,
+  student,
+  course,
+  group,
+  schedule,
+  section,
+  checkout
+} from "@/router/enums";
 
 /**
  * roles：页面级别权限，这里模拟二种 "admin"、"common"
@@ -19,6 +31,7 @@ const systemManagementRouter = {
     {
       path: "/system/user/index",
       name: "SystemUser",
+      component: "system/user/index",
       meta: {
         icon: "ri:admin-line",
         title: "menus.pureUser",
@@ -28,6 +41,7 @@ const systemManagementRouter = {
     {
       path: "/system/role/index",
       name: "SystemRole",
+      component: "system/role/index",
       meta: {
         icon: "ri:admin-fill",
         title: "menus.pureRole",
@@ -37,6 +51,7 @@ const systemManagementRouter = {
     {
       path: "/system/menu/index",
       name: "SystemMenu",
+      component: "system/menu/index",
       meta: {
         icon: "ep:menu",
         title: "menus.pureSystemMenu",
@@ -46,6 +61,7 @@ const systemManagementRouter = {
     {
       path: "/system/dept/index",
       name: "SystemDept",
+      component: "system/dept/index",
       meta: {
         icon: "ri:git-branch-line",
         title: "menus.pureDept",
@@ -117,6 +133,7 @@ const permissionRouter = {
     {
       path: "/permission/page/index",
       name: "PermissionPage",
+      component: "permission/page/index",
       meta: {
         title: "menus.purePermissionPage",
         roles: ["admin", "common"]
@@ -320,6 +337,132 @@ const tabsRouter = {
   ]
 };
 
+// // 学生管理路由
+// const studentRouter = {
+//   path: "/student",
+//   meta: {
+//     icon: "ep/user",
+//     title: "menus.pureStudent",
+//     rank: student
+//   },
+//   children: [
+//     {
+//       path: "/student/index",
+//       name: "StudentIndex",
+//       component: "student/index",
+//       meta: {
+//         title: "menus.pureStudent",
+//         roles: ["admin"]
+//       }
+//     }
+//   ]
+// };
+
+// 分组管理路由
+const groupRouter = {
+  path: "/group",
+  meta: {
+    icon: "ep/data-analysis",
+    title: "menus.group",
+    rank: group
+  },
+  children: [
+    {
+      path: "/group/index",
+      name: "GroupIndex",
+      component: "group/index",
+      meta: {
+        title: "menus.group",
+        roles: ["admin"]
+      }
+    }
+  ]
+};
+
+// 课程管理路由
+const courseRouter = {
+  path: "/course",
+  meta: {
+    icon: "ep:reading",
+    title: "menus.pureCourse",
+    rank: course
+  },
+  children: [
+    {
+      path: "/course/index",
+      name: "CourseIndex",
+      component: "course/index",
+      meta: {
+        title: "menus.pureCourse",
+        roles: ["admin"]
+      }
+    }
+  ]
+};
+
+// 排课管理路由
+const scheduleRouter = {
+  path: "/schedule",
+  meta: {
+    icon: "ep/calendar",
+    title: "menus.pureSchedule",
+    rank: schedule
+  },
+  children: [
+    {
+      path: "/schedule/index",
+      name: "ScheduleIndex",
+      component: "schedule/index",
+      meta: {
+        title: "menus.pureSchedule",
+        roles: ["admin"]
+      }
+    }
+  ]
+};
+
+// 课节管理路由
+const sectionRouter = {
+  path: "/section",
+  meta: {
+    icon: "ri/time-line",
+    title: "menus.pureSection",
+    rank: section
+  },
+  children: [
+    {
+      path: "/section/index",
+      name: "SectionIndex",
+      component: "section/index",
+      meta: {
+        title: "menus.pureSection",
+        roles: ["admin"]
+      }
+    }
+  ]
+};
+
+// 结算管理路由
+const checkoutRouter = {
+  path: "/checkout",
+  meta: {
+    icon: "ep/money",
+    title: "menus.pureCheckout",
+    rank: checkout
+  },
+  children: [
+    {
+      path: "/checkout/index",
+      name: "CheckoutIndex",
+      component: "checkout/index",
+      meta: {
+        title: "menus.pureCheckout",
+        roles: ["admin"]
+      }
+    }
+  ]
+};
+
 export default defineFakeRoute([
   {
     url: "/v1/menu/get-async-routes",
@@ -333,7 +476,13 @@ export default defineFakeRoute([
           systemMonitorRouter,
           permissionRouter,
           frameRouter,
-          tabsRouter
+          tabsRouter,
+          studentRouter,
+          groupRouter,
+          courseRouter,
+          scheduleRouter,
+          sectionRouter,
+          checkoutRouter
         ]
       };
     }

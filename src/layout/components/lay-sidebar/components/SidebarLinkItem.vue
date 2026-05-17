@@ -7,6 +7,9 @@ const props = defineProps<{
   to: menuType;
 }>();
 
+// 只使用 path 属性，避免 name 不匹配的问题
+const linkPath = computed(() => props.to.path);
+
 const isExternalLink = computed(() => isUrl(props.to.name));
 const getLinkProps = (item: menuType) => {
   if (isExternalLink.value) {
@@ -16,8 +19,9 @@ const getLinkProps = (item: menuType) => {
       rel: "noopener"
     };
   }
+  // 使用 path 属性，确保路由能正确匹配
   return {
-    to: item
+    to: item.path
   };
 };
 </script>

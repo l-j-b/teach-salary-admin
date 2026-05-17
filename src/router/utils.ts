@@ -22,6 +22,7 @@ import { userKey, type DataInfo } from "@/utils/auth";
 import { type menuType, routerArrays } from "@/layout/types";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import { useUserStoreHook } from "@/store/modules/user";
 const IFrame = () => import("@/layout/frame.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
@@ -42,12 +43,13 @@ function handRank(routeInfo: any) {
 /** 按照路由中meta下的rank等级升序来排序路由 */
 function ascending(arr: any[]) {
   arr.forEach((v, index) => {
-    // 当rank不存在时，根据顺序自动创建，首页路由永远在第一位
-    if (handRank(v)) v.meta.rank = index + 2;
+    if (v && v.meta && handRank(v)) {
+      v.meta.rank = index + 2;
+    }
   });
   return arr.sort(
     (a: { meta: { rank: number } }, b: { meta: { rank: number } }) => {
-      return a?.meta.rank - b?.meta.rank;
+      return (a?.meta?.rank ?? 0) - (b?.meta?.rank ?? 0);
     }
   );
 }
@@ -74,20 +76,39 @@ function filterChildrenTree(data: RouteComponent[]) {
 
 /** 判断两个数组彼此是否存在相同值 */
 function isOneOfArray(a: Array<string>, b: Array<string>) {
-  return Array.isArray(a) && Array.isArray(b)
-    ? intersection(a, b).length > 0
-      ? true
-      : false
-    : true;
+  if (!Array.isArray(a) || a.length === 0) return true;
+  if (!Array.isArray(b) || b.length === 0) return false;
+  return intersection(a, b).length > 0;
 }
 
 /** 从localStorage里取出当前登录用户的角色roles，过滤无权限的菜单 */
 function filterNoPermissionTree(data: RouteComponent[]) {
+  const userInfo = storageLocal().getItem<DataInfo<number>>(userKey);
+  const localRoles = userInfo?.roles ?? [];
+  const storeRoles = useUserStoreHook().roles ?? [];
   const currentRoles =
-    storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [];
-  const newTree = cloneDeep(data).filter((v: any) =>
-    isOneOfArray(v.meta?.roles, currentRoles)
+    localRoles.length > 0 ? [...localRoles] : [...storeRoles];
+  console.log("[菜单权限过滤] localStorage中的roles:", userInfo);
+  console.log(
+    "[菜单权限过滤] 当前用户角色:",
+    currentRoles,
+    "localRoles:",
+    [...localRoles],
+    "storeRoles:",
+    [...storeRoles]
   );
+  const newTree = cloneDeep(data).filter((v: any) => {
+    const hasPermission = isOneOfArray(v.meta?.roles, currentRoles);
+    console.log(
+      "[菜单权限过滤] 菜单:",
+      v.path,
+      "要求的角色:",
+      v.meta?.roles,
+      "有权限:",
+      hasPermission
+    );
+    return hasPermission;
+  });
   newTree.forEach(
     (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
   );
@@ -156,34 +177,46 @@ function addPathMatch() {
 
 /** 处理动态路由（后端返回的路由） */
 function handleAsyncRoutes(routeList) {
+  console.log("[handleAsyncRoutes] 接收到的路由:", JSON.stringify(routeList, null, 2));
+  
   if (routeList.length === 0) {
     usePermissionStoreHook().handleWholeMenus(routeList);
   } else {
-    formatFlatteningRoutes(addAsyncRoutes(routeList)).map(
-      (v: RouteRecordRaw) => {
-        // 防止重复添加路由
-        if (
-          router.options.routes[0].children.findIndex(
-            value => value.path === v.path
-          ) !== -1
-        ) {
-          return;
-        } else {
-          // 切记将路由push到routes后还需要使用addRoute，这样路由才能正常跳转
-          router.options.routes[0].children.push(v);
-          // 最终路由进行升序
-          ascending(router.options.routes[0].children);
-          if (!router.hasRoute(v?.name)) router.addRoute(v);
-          const flattenRouters: any = router
-            .getRoutes()
-            .find(n => n.path === "/");
-          // 保持router.options.routes[0].children与path为"/"的children一致，防止数据不一致导致异常
-          flattenRouters.children = router.options.routes[0].children;
-          router.addRoute(flattenRouters);
-        }
+    const processedRoutes = addAsyncRoutes(routeList);
+    console.log("[handleAsyncRoutes] 处理后的路由:", JSON.stringify(processedRoutes, null, 2));
+    
+    formatFlatteningRoutes(processedRoutes).map((v: RouteRecordRaw) => {
+      console.log("[handleAsyncRoutes] 遍历路由:", v.path, v.name, "component:", v.component ? "有" : "无");
+      
+      // 防止重复添加路由 - 同时检查 path 和 name
+      const existingByPath = router.options.routes[0].children.findIndex(
+        value => value.path === v.path
+      );
+      const existingByName = router.hasRoute(v?.name);
+      
+      if (existingByPath !== -1 || existingByName) {
+        console.log("[handleAsyncRoutes] 跳过重复路由:", v.path, "byPath:", existingByPath !== -1, "byName:", existingByName);
+        return;
+      } else {
+        // 切记将路由push到routes后还需要使用addRoute，这样路由才能正常跳转
+        router.options.routes[0].children.push(v);
+        // 最终路由进行升序
+        ascending(router.options.routes[0].children);
+        
+        console.log("[handleAsyncRoutes] 尝试添加路由:", v.path, v.name);
+        router.addRoute(v);
+        console.log("[handleAsyncRoutes] 路由添加成功:", v.path);
+        
+        const flattenRouters: any = router
+          .getRoutes()
+          .find(n => n.path === "/");
+        // 保持router.options.routes[0].children与path为"/"的children一致，防止数据不一致导致异常
+        flattenRouters.children = router.options.routes[0].children;
+        router.addRoute(flattenRouters);
       }
-    );
-    usePermissionStoreHook().handleWholeMenus(routeList);
+    });
+    // 传入处理后的路由（包含 component 字段）
+    usePermissionStoreHook().handleWholeMenus(processedRoutes);
   }
   if (!useMultiTagsStoreHook().getMultiTagsCache) {
     useMultiTagsStoreHook().handleTags("equal", [
@@ -203,6 +236,7 @@ function initRouter() {
     const key = "async-routes";
     const asyncRouteList = storageLocal().getItem(key) as any;
     if (asyncRouteList && asyncRouteList?.length > 0) {
+      console.log("[initRouter] 使用缓存的路由:", asyncRouteList);
       return new Promise(resolve => {
         handleAsyncRoutes(asyncRouteList);
         resolve(router);
@@ -210,6 +244,7 @@ function initRouter() {
     } else {
       return new Promise(resolve => {
         getAsyncRoutes().then(({ code, data }) => {
+          console.log("[initRouter] API返回:", code, data);
           if (code === 20000) {
             handleAsyncRoutes(cloneDeep(data));
             storageLocal().setItem(key, data);
@@ -223,6 +258,7 @@ function initRouter() {
   } else {
     return new Promise(resolve => {
       getAsyncRoutes().then(({ code, data }) => {
+        console.log("[initRouter] API返回:", code, data);
         if (code === 20000) {
           handleAsyncRoutes(cloneDeep(data));
           resolve(router);
@@ -315,8 +351,9 @@ function handleAliveRoute({ name }: ToRouteType, mode?: string) {
 
 /** 过滤后端传来的动态路由 重新生成规范路由 */
 function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
-  if (!arrRoutes || !arrRoutes.length) return;
+  if (!arrRoutes || !arrRoutes.length) return arrRoutes;
   const modulesRoutesKeys = Object.keys(modulesRoutes);
+  
   arrRoutes.forEach((v: RouteRecordRaw) => {
     // 将backstage属性加入meta，标识此路由为后端返回路由
     v.meta.backstage = true;
@@ -326,19 +363,34 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     // 父级的name属性取值：如果子级存在且父级的name属性不存在，默认取第一个子级的name；如果子级存在且父级的name属性存在，取存在的name属性，会覆盖默认值（注意：测试中发现父级的name不能和子级name重复，如果重复会造成重定向无效（跳转404），所以这里给父级的name起名的时候后面会自动加上`Parent`，避免重复）
     if (v?.children && v.children.length && !v.name)
       v.name = (v.children[0].name as string) + "Parent";
+    
+    // 处理组件
     if (v.meta?.frameSrc) {
       v.component = IFrame;
     } else {
       // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
-      const index = v?.component
-        ? modulesRoutesKeys.findIndex(ev => ev.includes(v.component as any))
-        : modulesRoutesKeys.findIndex(ev => ev.includes(v.path));
-      v.component = modulesRoutes[modulesRoutesKeys[index]];
+      let searchPath = "";
+      if (v.component && typeof v.component === "string" && v.component.trim() !== "") {
+        searchPath = v.component as string;
+      } else {
+        searchPath = v.path;
+      }
+      
+      const index = modulesRoutesKeys.findIndex(ev => ev.includes(searchPath));
+      
+      if (index !== -1) {
+        v.component = modulesRoutes[modulesRoutesKeys[index]];
+      } else {
+        console.warn(`[路由] 未找到组件: ${searchPath}, 路径: ${v.path}`);
+      }
     }
+    
+    // 递归处理子路由
     if (v?.children && v.children.length) {
       addAsyncRoutes(v.children);
     }
   });
+  
   return arrRoutes;
 }
 

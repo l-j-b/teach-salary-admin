@@ -94,11 +94,15 @@ export const useUserStore = defineStore("pure-user", {
       // }
       data.password = data.password.trim();
       // 对密码进行加密
-      data.password = await this.encryptPassword(data.password);
+      // data.password = await this.encryptPassword(data.password);
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
           .then(data => {
+            console.log("[登录] API响应:", data);
+            console.log("[登录] data.data:", data?.data);
+            console.log("[登录] data.data.roles:", data?.data?.roles);
             if (data.code === 20000) {
+              console.log("[登录] 调用setToken，参数:", data.data);
               setToken(data.data);
               resolve(data);
             } else {

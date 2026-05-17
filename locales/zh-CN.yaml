@@ -86,6 +86,9 @@ menus:
   pureCodeMirror: 代码编辑器
   pureMarkdown: Markdown
   pureStudent: 学生管理
+  pureSchedule: 排课管理
+  pureSection: 课节管理
+  pureCheckout: 结算管理
   group: 分组管理
   course: 课程管理
   studentInfo: 学生信息管理

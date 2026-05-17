@@ -38,12 +38,12 @@ import {
   multipleTabsKey
 } from "@/utils/auth";
 
-/** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 扩展名的所有文件，除了 remaining.ts 文件
+/** 自动导入全部静态路由，无需再手动引入！匹配 src/router/modules 目录（任何嵌套级别）中具有 .ts 或 .txt 扩展名的所有文件，除了 remaining.ts 文件
  * 如何匹配所有文件请看：https://github.com/mrmlnc/fast-glob#basic-syntax
  * 如何排除文件请看：https://cn.vitejs.dev/guide/features.html#negative-patterns
  */
 const modules: Record<string, any> = import.meta.glob(
-  ["./modules/**/*.ts", "!./modules/**/remaining.ts"],
+  ["./modules/**/*.{ts,txt}", "!./modules/**/remaining.ts"],
   {
     eager: true
   }
@@ -53,12 +53,24 @@ const modules: Record<string, any> = import.meta.glob(
 const routes = [];
 
 Object.keys(modules).forEach(key => {
-  routes.push(modules[key].default);
+  const module = modules[key];
+  if (typeof module === "object" && module !== null) {
+    if (module.default) {
+      routes.push(module.default);
+    } else if (module.path) {
+      routes.push(module);
+    }
+  }
 });
+
+/** 过滤无效路由，只保留有 path 属性的对象 */
+const validRoutes = routes
+  .flat(Infinity)
+  .filter(route => route && typeof route === "object" && route.path);
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
-  formatFlatteningRoutes(buildHierarchyTree(ascending(routes.flat(Infinity))))
+  formatFlatteningRoutes(buildHierarchyTree(ascending(validRoutes)))
 );
 
 /** 初始的静态路由，用于退出登录时重置路由 */
@@ -66,7 +78,7 @@ const initConstantRoutes: Array<RouteRecordRaw> = cloneDeep(constantRoutes);
 
 /** 用于渲染菜单，保持原始层级 */
 export const constantMenus: Array<RouteComponent> = ascending(
-  routes.flat(Infinity)
+  validRoutes
 ).concat(...remainingRouter);
 
 /** 不参与菜单的路由 */
@@ -85,13 +97,20 @@ export const router: Router = createRouter({
         return savedPosition;
       } else {
         if (from.meta.saveSrollTop) {
-          const top: number =
-            document.documentElement.scrollTop || document.body.scrollTop;
+          const top: number = document.documentElement.scrollTop || document.body.scrollTop;
           resolve({ left: 0, top });
         }
       }
     });
   }
+});
+
+console.log("[Router] 初始化路由，注册以下路由:");
+router.getRoutes().forEach(route => {
+  console.log(`  路径: ${route.path}, 名称: ${route.name}, 子路由数: ${route.children?.length || 0}`);
+  route.children?.forEach(child => {
+    console.log(`    子路由: ${child.path}, 名称: ${child.name}`);
+  });
 });
 
 /** 记录已经加载的页面路径 */

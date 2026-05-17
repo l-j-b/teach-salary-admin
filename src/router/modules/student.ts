@@ -8,7 +8,7 @@ export default {
   component: Layout,
   redirect: "/student/index",
   meta: {
-    icon: "ep:user-filled",
+    icon: "ep/user",
     title: $t("menus.pureStudent"),
     rank: student
   },

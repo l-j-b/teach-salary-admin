@@ -1,39 +1,29 @@
-/** 学生表单类型 */
+import { Gender, StudentGrade } from "@/api/student";
+
 export interface FormItemProps {
   _id?: string;
   name: string;
-  gender?: number;
   avatar?: string;
+  grades: string;
+  subjects: string[];
+  hourlyfee: number;
+  parentsName?: string;
+  gender: Gender | string;
   birthday?: string;
   age?: number;
-  tags?: string;
-  grades?: string;
   phone?: string;
+  tags?: string[];
   remarks?: string;
+  email?: string;
   wechart?: string;
   address?: string;
-  email?: string;
-  status?: number;
-  groupId?: string;
 }
 
-/** 学生列表项类型 */
-export interface StudentItem {
+export interface StudentItem extends FormItemProps {
   _id: string;
-  name: string;
-  gender: number;
-  avatar: string;
-  birthday: string;
-  age: number;
-  tags: string;
-  grades: string;
-  phone: string;
-  remarks: string;
-  wechart: string;
-  address: string;
-  email: string;
-  status: number;
-  groupId: string;
-  createTime?: string;
-  updateTime?: string;
+  userId?: string;
+  createDate?: string;
+  updateDate?: string;
 }
+
+export { Gender, StudentGrade };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useStudent } from "./utils/hook";
+import { useSection } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
@@ -10,7 +10,7 @@ import Refresh from "~icons/ep/refresh";
 import AddFill from "~icons/ri/add-circle-line";
 
 defineOptions({
-  name: "StudentManagement"
+  name: "SectionManagement"
 });
 
 const formRef = ref();
@@ -35,7 +35,7 @@ const {
   onSelectionCancel,
   handleCurrentChange,
   handleSelectionChange
-} = useStudent(tableRef);
+} = useSection(tableRef);
 </script>
 
 <template>
@@ -46,18 +46,18 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-3 overflow-auto"
     >
-      <el-form-item label="学生姓名：" prop="name">
+      <el-form-item label="课节名称：" prop="name">
         <el-input
           v-model="form.name"
-          placeholder="请输入学生姓名"
+          placeholder="请输入课节名称"
           clearable
           class="w-45!"
         />
       </el-form-item>
-      <el-form-item label="年级：" prop="grades">
+      <el-form-item label="课程名称：" prop="courseName">
         <el-input
-          v-model="form.grades"
-          placeholder="请输入年级"
+          v-model="form.courseName"
+          placeholder="请输入课程名称"
           clearable
           class="w-45!"
         />
@@ -77,14 +77,14 @@ const {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="学生管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar title="课节管理" :columns="columns" @refresh="onSearch">
       <template #buttons>
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
           @click="openDialog()"
         >
-          新增学生
+          新增课节
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -141,7 +141,7 @@ const {
               修改
             </el-button>
             <el-popconfirm
-              :title="`是否确认删除学生${row.name}的这条数据`"
+              :title="`是否确认删除课节${row.name}的这条数据`"
               @confirm="handleDelete(row)"
             >
               <template #reference>
